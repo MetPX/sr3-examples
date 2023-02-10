@@ -98,9 +98,9 @@ class S3CloudPublisher(FlowCB):
             with open(filepath, 'rb') as data:
                 self.s3_client.upload_fileobj(data, self.s3_bucket_name, blob_identifier)
                 logger.info('published to {}'.format(url))
-                # Rename message parameters to set new location as the bucket
+                # Rename message parameters to set new download location as the bucket
                 msg["baseUrl"] = self.s3_client.meta.endpoint_url
-                msg["relPath"] = self.s3_bucket_name + "/" + blob_identifier
+                msg["retPath"] = self.s3_bucket_name + "/" + blob_identifier
         except ClientError as err:
             logger.error(err)
             return False
