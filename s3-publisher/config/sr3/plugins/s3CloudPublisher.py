@@ -1,6 +1,6 @@
 # =================================================================
 #
-# Authors: Tom Kralidis <tomkralidis@gmail.com>
+# Authors: Tom Kralidis <tomkralidis@gmail.com>, Tyson Kaufmann
 #
 # Copyright (c) 2021 Tom Kralidis
 #
@@ -38,7 +38,7 @@ from botocore.exceptions import ClientError
 logger = logging.getLogger(__name__)
 
 class S3CloudPublisher(FlowCB):
-    """core cloud data publisher for s3"""
+    """Cloud data publisher for s3"""
 
     def __init__(self, options):
         """initialize"""
@@ -49,14 +49,21 @@ class S3CloudPublisher(FlowCB):
         self.s3_bucket_name = os.environ.get('S3_BUCKET_NAME', None)
         aws_id = os.environ.get('AWS_ACCESS_KEY_ID', None)
         aws_key = os.environ.get('AWS_SECRET_ACCESS_KEY', None)
+        aws_region = os.environ.get('AWS_REGION', None)
 
         if None in [self.s3_url, self.s3_bucket_name, aws_id, aws_key]:
             raise EnvironmentError('environment variables not set')
 
-        self.s3_client = boto3.client('s3', endpoint_url=self.s3_url, 
-                aws_access_key_id=aws_id, aws_secret_access_key=aws_key)
+        # Connect to a specific region if specified
+        if aws_region:
+            self.s3_client = boto3.client('s3', endpoint_url=self.s3_url, 
+                    aws_access_key_id=aws_id, aws_secret_access_key=aws_key,
+                    region_name=aws_region)
+        else:
+            self.s3_client = boto3.client('s3', endpoint_url=self.s3_url, 
+                    aws_access_key_id=aws_id, aws_secret_access_key=aws_key)
 
-    def after_work(self, worklist) -> None:
+    def after_accept(self, worklist) -> None:
         """
         sarracenia dispatcher
 
@@ -65,47 +72,51 @@ class S3CloudPublisher(FlowCB):
    
         """
 
-        for msg in worklist.ok:
+        new_incoming=[]
+
+        for msg in worklist.incoming:
            try:
-               filepath = msg['new_dir'] + os.sep + msg['new_file']
-               logger.debug('Filepath: {}'.format(filepath))
-               identifier = msg['new_file']
+               # Filepath of the local file
+               filepath = os.sep + msg['relPath']
+               logger.debug('Local filepath: {}'.format(filepath))
 
-               self.publish_to_s3(msg=msg, blob_identifier=identifier, filepath=filepath)
+               identifier = os.path.basename(filepath)
 
-               logger.debug('not checking return status is odd, do we want retry-logic?')
+               self.publish_to_s3(msg=msg, filepath=filepath)
+
+               # If pulbish was successful, append to new worklist.incoming
+               new_incoming.append(msg)
 
            except Exception as err:
-               print("ERROR", err)
-               logger.warning(err)
+               # Publish was not successful, append to worklist.failed for retry
+               logger.error("Error sending to remote")
+               logger.error(err)
+               worklist.failed.append(msg)
+               continue
+
+        worklist.incoming = new_incoming
 
 
-    def publish_to_s3(self, msg, blob_identifier: str,
-                      filepath: str) -> bool:
+    def publish_to_s3(self, msg, filepath: str) -> None:
         """
         s3 object publisher
 
-        :param blob_identifier: `str` of blob id
         :param filepath: `str` of local filepath to upload
 
         :returns: `bool` of dispatch result
         """
 
+        remote_filepath = filepath.lstrip("/")
+
         url = os.path.normpath(os.path.join(
-             self.s3_client.meta.endpoint_url, self.s3_bucket_name, blob_identifier))
+             self.s3_client.meta.endpoint_url, self.s3_bucket_name, remote_filepath))
 
-        try:
-            with open(filepath, 'rb') as data:
-                self.s3_client.upload_fileobj(data, self.s3_bucket_name, blob_identifier)
-                logger.info('published to {}'.format(url))
-                # Rename message parameters to set new download location as the bucket
-                msg["baseUrl"] = self.s3_client.meta.endpoint_url
-                msg["retPath"] = self.s3_bucket_name + "/" + blob_identifier
-        except ClientError as err:
-            logger.error(err)
-            return False
-
-        return True
+        with open(filepath, 'rb') as data:
+            self.s3_client.upload_fileobj(data, self.s3_bucket_name, remote_filepath)
+            logger.info('Published file to {}'.format(url))
+            # Rename message parameters to set new location as the bucket
+            msg["new_baseUrl"] = self.s3_client.meta.endpoint_url
+            msg["new_retPath"] = self.s3_bucket_name + "/" + remote_filepath
 
     def __repr__(self):
         return '<S3CloudPublisher>'
