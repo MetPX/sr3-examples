@@ -71,7 +71,6 @@ class AzureCloudPublisher(FlowCB):
 
         new_incoming=[]
 
-        # Send each message which was properly downloaded or worked on
         for msg in worklist.incoming:
            try:
                # Filepath of the local file
