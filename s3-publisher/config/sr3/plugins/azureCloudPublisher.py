@@ -1,6 +1,6 @@
 # =================================================================
 #
-# Authors: Tom Kralidis <tomkralidis@gmail.com>
+# Authors: Tom Kralidis <tomkralidis@gmail.com>, Tyson Kaufmann
 #
 # Copyright (c) 2021 Tom Kralidis
 #
@@ -39,10 +39,10 @@ from azure.storage.blob import BlobServiceClient
 logger = logging.getLogger(__name__)
 
 class AzureCloudPublisher(FlowCB):
-    """core cloud data publisher"""
+    """Azure cloud data publisher"""
 
     def __init__(self, options):
-        """initialize"""
+        """Initialize plugin and check environment variables"""
 
         self.o = options
 
@@ -50,17 +50,17 @@ class AzureCloudPublisher(FlowCB):
         self.connection_string = os.environ.get('AZURE_STORAGE_CONNECTION_STRING', None)
         
         if None in [self.container_name, self.connection_string]:
-            raise EnvironmentError('environment variables not set')
+            raise EnvironmentError('Environment variables not set or accessible')
 
         try:
             self.blob_service_client = BlobServiceClient.from_connection_string(
                 self.connection_string)
-        except ValueError as err:
+        except Exception as err:
             logger.error("Failed to initialize connection to container with connection string")
             logger.error(err)
             raise err
 
-    def after_work(self, worklist) -> None:
+    def after_accept(self, worklist) -> None:
         """
         sarracenia dispatcher
 
@@ -69,43 +69,56 @@ class AzureCloudPublisher(FlowCB):
    
         """
 
-        for msg in worklist.ok:
+        new_incoming=[]
+
+        # Send each message which was properly downloaded or worked on
+        for msg in worklist.incoming:
            try:
-               filepath = msg['new_dir'] + os.sep + msg['new_file']
-               logger.info('Filepath: {}'.format(filepath))
-               identifier = msg['new_file']
+               # Filepath of the local file
+               filepath = os.sep + msg['relPath'] 
+               logger.debug('Local filepath: {}'.format(filepath))
+               
+               self.publish_to_azure(msg=msg, filepath=filepath)
 
-               self.publish_to_azure(msg=msg, blob_identifier=identifier, filepath=filepath)
-
-               logger.debug('not checking return status is odd, do we want retry-logic?')
+               # If pulbish was successful, append to new worklist.incoming
+               new_incoming.append(msg)
 
            except Exception as err:
-               print("ERROR", err)
-               logger.warning(err)
+               # Publish was not successful, append to worklist.failed for retry
+               logger.error("Error sending to remote")
+               logger.error(err)
+               worklist.failed.append(msg)
+               continue
+
+        worklist.incoming = new_incoming
 
 
-    def publish_to_azure(self, msg, blob_identifier: str, filepath: str) -> bool:
+    def publish_to_azure(self, msg, filepath: str) -> bool:
         """
         Azure blob file publisher
 
-        :param blob_identifier: `str` of blob id
         :param filepath: `str` of local filepath to upload
 
         :returns: `bool` of dispatch result
         """
+        
+        # Remove leading /'s from filepath to allow proper dir creation on azure
+        remote_filepath = filepath.lstrip("/")
 
+        # Set blob name to the relative path within the container
         blob_client = self.blob_service_client.get_blob_client(
             container=self.container_name,
-            blob=blob_identifier)
+            blob=remote_filepath)
 
         try:
             with open(filepath, 'rb') as data:
-                result = blob_client.upload_blob(data)
-                logger.info(result)
-                logger.info('published to {}'.format(blob_client.url))
+                result = blob_client.upload_blob(data=data, overwrite=True)
+                logger.debug(result)
+                logger.info('Published file to {}'.format(blob_client.url))
                 p_url = urlparse(blob_client.url)
-                msg["baseUrl"] = '{uri.scheme}://{uri.netloc}/'.format(uri=p_url)
-                msg["retPath"] = blob_client.container_name + "/" + blob_client.blob_name
+                # Overwrite where to retreive the file in posted messages
+                msg["new_baseUrl"] = '{uri.scheme}://{uri.netloc}/'.format(uri=p_url)
+                msg["new_retPath"] = blob_client.container_name + "/" + blob_client.blob_name
         except ResourceNotFoundError as err:
             logger.error(err)
             return False
