@@ -91,7 +91,6 @@ class AzureCloudPublisher(FlowCB):
 
         worklist.incoming = new_incoming
 
-
     def publish_to_azure(self, msg, filepath: str) -> bool:
         """
         Azure blob file publisher
@@ -109,20 +108,14 @@ class AzureCloudPublisher(FlowCB):
             container=self.container_name,
             blob=remote_filepath)
 
-        try:
-            with open(filepath, 'rb') as data:
-                result = blob_client.upload_blob(data=data, overwrite=True)
-                logger.debug(result)
-                logger.info('Published file to {}'.format(blob_client.url))
-                p_url = urlparse(blob_client.url)
-                # Overwrite where to retreive the file in posted messages
-                msg["new_baseUrl"] = '{uri.scheme}://{uri.netloc}/'.format(uri=p_url)
-                msg["new_retPath"] = blob_client.container_name + "/" + blob_client.blob_name
-        except ResourceNotFoundError as err:
-            logger.error(err)
-            return False
-
-        return True
+        with open(filepath, 'rb') as data:
+            result = blob_client.upload_blob(data=data, overwrite=True)
+            logger.debug(result)
+            logger.info('Published file to {}'.format(blob_client.url))
+            p_url = urlparse(blob_client.url)
+            # Overwrite where to retreive the file in posted messages
+            msg["new_baseUrl"] = '{uri.scheme}://{uri.netloc}/'.format(uri=p_url)
+            msg["new_retPath"] = blob_client.container_name + "/" + blob_client.blob_name
 
     def __repr__(self):
         return '<AzureCloudPublisher>'
