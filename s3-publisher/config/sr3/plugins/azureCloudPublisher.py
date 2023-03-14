@@ -71,6 +71,7 @@ class AzureCloudPublisher(FlowCB):
 
         new_incoming=[]
 
+        # Send each message which was properly downloaded or worked on
         for msg in worklist.incoming:
            try:
                # Filepath of the local file
@@ -90,6 +91,7 @@ class AzureCloudPublisher(FlowCB):
                continue
 
         worklist.incoming = new_incoming
+
 
     def publish_to_azure(self, msg, filepath: str) -> bool:
         """
@@ -116,6 +118,8 @@ class AzureCloudPublisher(FlowCB):
             # Overwrite where to retreive the file in posted messages
             msg["new_baseUrl"] = '{uri.scheme}://{uri.netloc}/'.format(uri=p_url)
             msg["new_retPath"] = blob_client.container_name + "/" + blob_client.blob_name
+
+        return True
 
     def __repr__(self):
         return '<AzureCloudPublisher>'
