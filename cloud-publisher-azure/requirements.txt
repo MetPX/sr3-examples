@@ -1,0 +1,2 @@
+azure-core
+azure-storage-blob
