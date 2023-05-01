@@ -22,7 +22,36 @@ In fact deploying a broker is a fairly rare need, but to demonstrate what Sarrac
 is, using a broker and a dedicated vm makes things much clearer.
 
 So this example describes how to configure an ubuntu 22.04 virtual machine after
-it is obtained.
+it is obtained. In this example, you will see the simplest possible examples that
+demonstrate:
+
+* What is a broker?
+* how do you connect to a broker?
+  * broker URL
+  * exchange.
+* What are sr3 configuration files?
+  * format
+  * placement
+  * meaning.
+* How do you post files to a broker?
+  * post_baseUrl
+* How do you subscribe to a feed?
+  * queue
+  * topic
+  * binding
+  * directory
+* adjusting file placement.
+  * by the subscriber
+    * baseDir
+  * by the publisher
+    * post_baseUrl
+    * post_baseDir
+
+
+
+
+
+
 
 In addition, if there is a need for a local broker, then the recipes in this example 
 also provide a good starting point. and the tests here allow verification that each
@@ -95,8 +124,8 @@ stored in the ~/.config/sr3/credentials.conf:
 * anonymous - a *subsrciber* that everyone knows the password for.
 
 
-Access the Management Interface
--------------------------------
+Access the Broker Management Interface
+--------------------------------------
 
 RabbitMQ has a management GUI that is makes everything involved in message exchange visible.
 RabbitMQ considers the management GUI privileged access, and it is not available to most
@@ -262,19 +291,19 @@ One can now look in the management GUI for:
 
 First the exchanges:
 
-.. image:: Mgmt_GUI_Exchanges.png
+.. image:: Pictures/Mgmt_GUI_Exchanges.png
 
 Note the xs_tsource_public exchange has been added (because of the post_exchange declaration in cpost/my_feed )
 
 Then the queues:
 
-.. image:: Mgmt_GUI_Queues.png
+.. image:: Pictures/Mgmt_GUI_Queues.png
 
 When a subscriber is declared, a queue for it must be created on the broker to hold messages published until
 they are picked up by the subscriber. Sr3 guesses at a reasonable name, and adds some randomised sequences
 to the end to allow multiple declarations using the same broker not to clash.
 
-.. image:: Mgmt_GUI_Queue_detail.png
+.. image:: Pictures/Mgmt_GUI_Queue_Detail.png
 
 Clicking on the queue for more detail, one can see that a how the publisher and subscriber are related to
 each other on the broker.  A *binding* of the queue has been created to the posters channel (xs_tsource_public.) 
@@ -462,7 +491,7 @@ by setting post_baseUrl to include the invariant part, so:
 
 * in cpost/my_feed, change the post_baseUrl line to::
 
-  post_baseUrl file:/home/ubuntu/empty-amqp-pump/sample/groceries
+      post_baseUrl file:/home/ubuntu/empty-amqp-pump/sample/groceries
 
 
 clean up the copied tree::
@@ -504,6 +533,14 @@ Now the messages contain a baseUrl that clearly marks the invariant directories 
     drwxrwxr-x 2 ubuntu ubuntu 4096 May  1 01:38 nuts
     drwxrwxr-x 2 ubuntu ubuntu 4096 May  1 01:38 vegetables
     ubuntu@flow:~/hungry$
+
+
+
+Install a Web Server
+--------------------
+
+On the VM, there is currently just a broker, and announcing files locally does not make them available
+to people who cannot log in to the server itself. so install a web server::
 
 
 
