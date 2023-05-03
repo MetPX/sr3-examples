@@ -1,10 +1,8 @@
 
 
-An Empty Data Pump in a Virtual Machine
-=======================================
+Sarracenia 101: An Empty Data Pump in a Virtual Machine
+=======================================================
 
-
-STATUS: In development, not ready yet.
 
 Pre-requisites:
 
@@ -84,7 +82,8 @@ This will provide a shell in an initialized VM:
 Once in a shell on the VM, get a copy of this repository:
 
    **git clone https://github.com/MetPX/sr3-examples**
-   **cd empty-amqp-pump**
+
+   **cd sr3-examples/empty-amqp-pump**
 
 The following script Will install Sarracenia and configure the rabbitmq broker 
 with a few users. The management interface will also be active, and one can point
@@ -237,18 +236,20 @@ Then verify that sr3 sees the configurations:
 ::
 
     missing state for cpost/my_feed
-    status: 
-    Component/Config                         Processes   Connection        Lag                Rates                                        
-                                             State   Run Retry  msg data   LagMax  LagAvg  %rej     pubsub   messages     RxData     TxData 
-                                             -----   --- -----  --- ----   ------  ------  ----   --------       ----     ------     ------ 
+    status:
+    Component/Config                         Processes   Connection        Lag                Rates
+                                             State   Run Retry  msg data   LagMax  LagAvg  %rej     pubsub   messages     RxData     TxData
+                                             -----   --- -----  --- ----   ------  ------  ----   --------       ----     ------     ------
     cpost/my_feed                            stop    0/0          -          -         -     -          -        -          -          -          -
+    sarra/web_feed                           stop    0/0          -          -         -     -          -        -
     subscribe/hungry                         stop    0/0          -          -         -     -          -        -
-          Total Running Configs:   0 ( Processes: 0 missing: 0 stray: 0 )
-                         Memory: uss:0 Bytes rss:0 Bytes vms:0 Bytes 
-                       CPU Time: User:0.00s System:0.00s 
-    	   Pub/Sub Received: 0 msgs/s (0 Bytes/s), Sent:  0 msgs/s (0 Bytes/s)
-    	      Data Received: 0 Files/s (0 Bytes/s), Sent: 0 Files/s (0 Bytes/s) 
-    ubuntu@flow:~/empty-amqp-pump/config/sr3$ 
+    subscribe/web_hungry                     stop    0/0          -          -         -     -          -        -
+      Total Running Configs:   0 ( Processes: 0 missing: 0 stray: 0 )
+                     Memory: uss:0 Bytes rss:0 Bytes vms:0 Bytes
+                   CPU Time: User:0.00s System:0.00s
+	   Pub/Sub Received: 0 msgs/s (0 Bytes/s), Sent:  0 msgs/s (0 Bytes/s)
+	      Data Received: 0 Files/s (0 Bytes/s), Sent: 0 Files/s (0 Bytes/s)
+    ubuntu@flow:~/sr3-examples/empty-amqp-pump/config/sr3$
     
 Have a look at the configurations installed:
 
