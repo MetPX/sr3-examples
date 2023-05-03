@@ -1,5 +1,7 @@
 
-Creation of an empty data pump in a Virtual Machine.
+
+An Empty Data Pump in a Virtual Machine
+=======================================
 
 
 STATUS: In development, not ready yet.
@@ -8,6 +10,9 @@ Pre-requisites:
 
 * You have the means of creating a ubuntu 22.04 virtual machine.
   (means of creating a VM are outside the scope of this recipe.)
+
+* administrative control over the virtual machine (ability to install and
+  configure software.)
 
 * You can use your browser to access the ports on the virtual machine.
   (configuring firewalls or routing rules to enable this are outside the scope.)
@@ -18,7 +23,7 @@ Pre-requisites:
 Purpose
 -------
 
-In many, many deployment cases, one can use sarracenia without a vm or a local broker.
+In many deployment cases, one can use sarracenia without a vm or a local broker.
 In fact deploying a broker is a fairly rare need, but to demonstrate what Sarracenia
 is, using a broker and a dedicated vm makes things much clearer.
 
@@ -47,20 +52,9 @@ demonstrate:
   * binding
   * directory
 
-* adjusting file placement.
-
-  * by the subscriber
-
-    * baseDir
-
-  * by the publisher
-
-    * post_baseUrl
-    * post_baseDir
-
 
 In addition, if there is a need for a local broker, then the recipes in this example 
-also provide a good starting point. and the tests here allow verification that each
+also provide a good starting point, and the tests here allow verification that each
 step has worked along the way.
 
 
@@ -999,5 +993,160 @@ and look for rejects again:
 
    ubuntu@flow:~/.config/sr3/sarra$ 
 
-so now there are no rejects, did the file downloads succeed?
+so now it still complains about the mtime::
 
+   2023-05-03 06:58:33,436 [INFO] sarracenia.flowcb.log after_work rejected: 304 mtime not newer /var/www/html/data/groceries/dairy/milk/skim
+   2023-05-03 06:58:33,436 [INFO] sarracenia.flowcb.log after_work rejected: 304 mtime not newer /var/www/html/data/groceries/dairy/milk/soy
+   2023-05-03 06:58:33,436 [INFO] sarracenia.flowcb.log after_work rejected: 304 mtime not newer /var/www/html/data/groceries/dairy/milk/1percent
+
+So the issue is that, since the files have already been copied from the source to under /var/www/html, the files
+already downloaded aren't any different from what is being posted. If the files aren't new, then the sarra
+process will not forward them (duplicate suppression.) so we delete all the files that the sarra/web_feed has
+written:
+
+   ubuntu@flow:~/.config/sr3/sarra$ **rm -rf /var/www/html/data/groceries**
+
+then we can start again:
+
+   ubuntu@flow:~/.config/sr3/sarra$ **sr3 stop**
+
+   ubuntu@flow:~/.config/sr3/sarra$ **sr3 cleanup**
+
+   ubuntu@flow:~/.config/sr3/sarra$ **sr3 start sarra/web_feed subscribe/web_hungry**
+
+   ubuntu@flow:~/empty-amqp-pump/sample$ **sr3_cpost -c my_feed -p groceries**
+
+And now, if we look at the subscribe/web_feed log::
+
+    ubuntu@flow:~/.cache/sr3/log$ tail -f subscribe_web_hungry_01.log
+    .
+    .
+    .
+    2023-05-03 00:02:35,661 [INFO] sarracenia.flowcb.log after_accept accepted: (lag: 5.47 ) http://10.110.41.206/data/groceries dairy/milk/homo
+    2023-05-03 00:02:35,661 [INFO] sarracenia.flowcb.log after_accept accepted: (lag: 5.47 ) http://10.110.41.206/data/groceries dairy/yoghurt
+    2023-05-03 00:02:35,661 [INFO] sarracenia.flowcb.log after_accept accepted: (lag: 5.47 ) http://10.110.41.206/data/groceries dairy/yoghurt/yoplay_0fat_0sugar_all_chemical
+    2023-05-03 00:02:35,661 [INFO] sarracenia.flowcb.log after_accept accepted: (lag: 5.47 ) http://10.110.41.206/data/groceries dairy/yoghurt/blueberry
+    2023-05-03 00:02:35,661 [INFO] sarracenia.flowcb.log after_accept accepted: (lag: 5.47 ) http://10.110.41.206/data/groceries dairy/yoghurt/mango
+    2023-05-03 00:02:35,661 [INFO] sarracenia.flowcb.log after_accept accepted: (lag: 5.46 ) http://10.110.41.206/data/groceries dairy/yoghurt/raspberry
+    2023-05-03 00:02:35,661 [INFO] sarracenia.flowcb.log after_accept accepted: (lag: 5.46 ) http://10.110.41.206/data/groceries dairy/yoghurt/qir
+    2023-05-03 00:02:35,673 [INFO] sarracenia.flowcb.log after_work downloaded ok: /home/ubuntu/web_hungry/dairy/milk/homo
+    2023-05-03 00:02:35,673 [INFO] sarracenia.flowcb.log after_work directory ok: /home/ubuntu/web_hungry/dairy/yoghurt
+    2023-05-03 00:02:35,673 [INFO] sarracenia.flowcb.log after_work downloaded ok: /home/ubuntu/web_hungry/dairy/yoghurt/yoplay_0fat_0sugar_all_chemical
+    2023-05-03 00:02:35,673 [INFO] sarracenia.flowcb.log after_work downloaded ok: /home/ubuntu/web_hungry/dairy/yoghurt/blueberry
+    2023-05-03 00:02:35,673 [INFO] sarracenia.flowcb.log after_work downloaded ok: /home/ubuntu/web_hungry/dairy/yoghurt/mango
+
+
+It shows that we are seeing the download url's and then successfully downloading the corresponding files.
+If we inspect the subscribe/web_hungry's output directory, we see that it successfully
+copied the entire tree:
+
+    ubuntu@flow:~$ cd
+    ubuntu@flow:~$ find web_hungry -type f
+    web_hungry/grains/bread/whole_wheat
+    web_hungry/grains/bread/shinken_brot
+    web_hungry/grains/bread/Wonder
+    web_hungry/grains/bread/white
+    web_hungry/grains/flour/whole_wheat
+    web_hungry/grains/flour/white
+    web_hungry/grains/grains/hops
+    web_hungry/grains/grains/barley
+    .
+    .
+    .
+    web_hungry/dairy/yoghurt/raspberry
+    web_hungry/dairy/yoghurt/qir
+    ubuntu@flow:~$
+    
+
+
+Review
+------
+
+* we can use **sr3_cpost** to create json messages about files and send them to a *broker*
+
+* a *message broker* is software that matches what publishers with the expressed interests (or *bindings* ) of subscribers.
+
+  * We use rabbitmq as a broker, publish to an exchange (like a television channel )
+
+  * A subscriber will declare a queues, and bindings it to exchanges to match interests.
+
+* Sarracenia processes are managed with configuration files
+
+  * that are placed in a structured tree under *~/.config/sr3*.
+  * *default.conf* .. configuration settings to be used by all others.
+  * and *credentials.conf* ... contains authentication information, mostly as urls.
+  *  is a directory for each "component": e.g.:   cpost, subscribe, sarra
+
+    * A component sets some defaults for a configuration.
+
+  * each file in those directories sets how a linux process (or group of them) will run.
+  
+* there is a command line interface to working with the entire configuration tree at once:
+
+  * **sr3 status**  - snapshot of what is currently going on.
+  * **sr3 start/stop/restart** - manage the processes to run.
+  * **sr3 cleanup**  - delete server side resources.
+
+  by default, it operates on everything under *~/.config/sr3*. One can give configurations on the 
+  command line to operate on only a subset of the configurations listed by sr3 status.
+
+
+* The message contains a location in two parts: baseUrl, and relPath. eg:
+
+  * "baseUrl": "http://10.110.41.206/data/groceries",
+  * "relPath": "dairy/yoghurt/qir"
+
+  The two fields are combined to create a download Url. the baseUrl can be any Url, and
+  usually indicates how the file is retrieved. Sarracenia currently supports: file: http: and sftp:
+  urls.
+ 
+* sr_cpost is an example of a publisher.
+  A publisher needs to choose how to publish a path to get the baseUrl and relPath right.
+  its configuration would include options like:
+
+  * post_broker (a url) the server to publish to.
+  * post_exchange (a name) a sort of named channel to publish messages to.
+  * post_baseUrl - the baseUrl that will be in the message.
+  * post_baseDir - remove this part of the path when publishing the url
+
+  example:
+
+  * / to the apache web server is /var/www/html, so that must be at least part of post_baseDir
+
+  * we create files under there, such as /var/www/html/data/groceries/dairy/milk/soy
+
+  * the complete Url for retrieval is: http://10.110.41.206/data/groceries/dairy/milk/soy
+    it could be divided in a number of different ways. We chose to split at the "groceries"
+    level.
+
+  * so post_baseUrl = http://10.110.41.206/data/groceries ... the static part of the URL 
+  * so post_baseDir = /var/www/html/data/groceries to match it.
+
+
+* When downloading, the following configuration file options are important:
+
+  options: 
+
+     * broker (a url) the server the look for messages
+     * exchange (a name) where the message have been published.
+     * *directory* -- when mirroring a tree, start with a root where we want to write it
+
+     * *strip* -- Removes some levels of directories from the beginning of the relative path.
+       Sometimes we want to copy only part of a tree, and some intervening directories 
+       aren't relevant.
+
+* A sarra component is an example of a complete flow. It:
+
+  * consumes messages (posted by the cpost) from its broker queue.
+  * copies the files to the right place under the web server.
+  * modifies the messages for the files, so that subscribers can download from the web server.
+  * publishes those messages back to the broker (on another *exchange* or channel)
+
+  All Sarracenia components follow the same *flow*::
+
+  * gather  - subscribe to a message source, or look at a file system to generate messages.
+  * filter  - drop some messages from the gathered list.
+  * work    - to some file transfer or transformation.
+  * post    - adjust the messages and post the result for consumers from this.
+
+  Sarracenia configurations daisy chain together to achieve multi-hop processing.
