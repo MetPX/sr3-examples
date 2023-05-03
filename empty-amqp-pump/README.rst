@@ -4,7 +4,7 @@ Sarracenia 201: An Empty Data Pump in a Virtual Machine
 =======================================================
 
 
-In depth practical demonstration of sarracenia, for advanced linux users.
+This is an low-level practical introduction to and demonstration of Sarracenia, for advanced linux users.
 
 Pre-requisites:
 
@@ -346,14 +346,6 @@ message published by our poster.
 
 with sr3 and the broker configured, we can now run the copy. First step is to start up the subscriber:
 
-    ubuntu@flow:~/empty-amqp-pump/sample$ **sr3 start subscribe/hungry**
-
-::
-
-    starting:.( 1 ) Done
-
-    ubuntu@flow:~/empty-amqp-pump/sample$
-
 
 
 there is a *samples* directory with a tree of files, one can take a look:
@@ -393,6 +385,19 @@ which has the output::
     2023-05-01 01:05:24,604 [INFO] published: { "pubTime":"20230501050524.60227867", "baseUrl":"file:/", "relPath":"home/ubuntu/empty-amqp-pump/sample/groceries/dairy/yoghurt/qir", "topic":"v03.post.home.ubuntu.empty-amqp-pump.sample.groceries.dairy.yoghurt", "integrity":{  "method" : "sha512", "value" : "Ortmd680rFfAylgo/ZT52IbCbOWajOYOz2d4B5Qj3M/x1vGctlWAXVYJjm04oacQ3uWVI+7XUR5ank\nuMyzpGhg=="  } , "mtime":"20230501032604.57583808", "atime":"20230501043936.56064233", "mode":"0664", "size":"2"}
     ubuntu@flow:~/empty-amqp-pump/sample$
 
+
+so the posting happenned, and since the queue is declared we can go and look on the broker,
+and see all the messages queued for this subscriber.
+
+
+
+    ubuntu@flow:~/empty-amqp-pump/sample$ **sr3 start subscribe/hungry**
+
+::
+
+    starting:.( 1 ) Done
+
+    ubuntu@flow:~/empty-amqp-pump/sample$
 
 
 and then looking at the subscriber log, once can see the messages being received, filtered, and then the files being copied.:
