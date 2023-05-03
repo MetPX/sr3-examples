@@ -1,6 +1,6 @@
 
 
-Sarracenia 201: An Empty Data Pump in a Virtual Machine
+Sarracenia 102: An Empty Data Pump in a Virtual Machine
 =======================================================
 
 
@@ -33,19 +33,23 @@ In this example, you will see the simplest possible examples that demonstrate:
 * What is a broker?
 
 * how do you connect to a broker?
+
   * broker URL
   * exchange.
 
 * What are sr3 configuration files?
+
   * format
   * placement
   * meaning.
 
 * How do you post files to a broker?
+
   * post_baseUrl
   * path
 
 * How do you subscribe to a feed?
+
   * queue
   * topic
   * binding
