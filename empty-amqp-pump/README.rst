@@ -1,8 +1,10 @@
 
 
-Sarracenia 101: An Empty Data Pump in a Virtual Machine
+Sarracenia 201: An Empty Data Pump in a Virtual Machine
 =======================================================
 
+
+In depth practical demonstration of sarracenia, for advanced linux users.
 
 Pre-requisites:
 
@@ -18,16 +20,15 @@ Pre-requisites:
 * familiarity with linux command line. (ability to type shell commands.)
 
 
-Purpose
--------
+Purpose of this Example
+-----------------------
 
 In many deployment cases, one can use sarracenia without a vm or a local broker.
 In fact deploying a broker is a fairly rare need, but to demonstrate what Sarracenia
 is, using a broker and a dedicated vm makes things much clearer.
 
-So this example describes how to configure an ubuntu 22.04 virtual machine after
-it is obtained. In this example, you will see the simplest possible examples that
-demonstrate:
+Here is described how to configure an ubuntu 22.04 virtual machine as a data pump.
+In this example, you will see the simplest possible examples that demonstrate:
 
 * What is a broker?
 
