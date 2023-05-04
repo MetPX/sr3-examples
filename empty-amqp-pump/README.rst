@@ -705,7 +705,7 @@ create a writeable sub-directory for our use:
     
 And now you can browse there and see an empty directory:
 
-.. image:: Pictures/web_browser_empty.png
+.. image:: Pictures/Web_browser_empty.png
 
 
 
