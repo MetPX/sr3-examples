@@ -914,9 +914,12 @@ to indicate what sarra should remove from the path when publishing:
     ubuntu@flow:~/.config/sr3/subscribe$
     
 Then post the files again, and still no files are being written by subscribe/web_hungry.  In fact there are not even
-files in the log at all. If we check the *sr3 status* ::
+files in the log at all. If we check the *sr3 status* :
 
-    ubuntu@flow:~/.config/sr3/sarra$ sr3 status
+    ubuntu@flow:~/.config/sr3/sarra$ **sr3 status**
+
+::
+
     status:
     Component/Config                         Processes   Connection        Lag                Rates
                                              State   Run Retry  msg data   LagMax  LagAvg  %rej     pubsub   messages     RxData     TxData
@@ -950,12 +953,16 @@ We repost the messages (sr3_cpost like before) the messages and then look in the
    
    ubuntu@flow:~/empty-amqp-pump/sample$ **sr3_cpost -c my_feed -p groceries**
 
-::
+   .
 
    .
+
    .
-   .
-   ubuntu@flow:~/.config/sr3/sarra$ grep rejected ~/.cache/sr3/log/sarra_web_feed_01.log | head
+
+   ubuntu@flow:~/.config/sr3/sarra$ **grep rejected ~/.cache/sr3/log/sarra_web_feed_01.log | head**
+
+::
+
    2023-05-01 12:46:38,575 [INFO] sarracenia.flowcb.log after_work rejected: 304 mtime not newer /var/www/html/data/groceries/grains/bread/whole_wheat  
    2023-05-01 12:46:38,575 [INFO] sarracenia.flowcb.log after_work rejected: 304 mtime not newer /var/www/html/data/groceries/grains/bread/shinken_brot  
    2023-05-01 12:46:38,575 [INFO] sarracenia.flowcb.log after_work rejected: 304 mtime not newer /var/www/html/data/groceries/grains/bread/Wonder  
@@ -1051,8 +1058,12 @@ It shows that we are seeing the download url's and then successfully downloading
 If we inspect the subscribe/web_hungry's output directory, we see that it successfully
 copied the entire tree:
 
-    ubuntu@flow:~$ cd
-    ubuntu@flow:~$ find web_hungry -type f
+    ubuntu@flow:~$ *cd*
+
+    ubuntu@flow:~$ *find web_hungry -type f*
+
+:: 
+
     web_hungry/grains/bread/whole_wheat
     web_hungry/grains/bread/shinken_brot
     web_hungry/grains/bread/Wonder
@@ -1138,11 +1149,10 @@ Review
 
   options: 
 
-     * broker (a url) the server the look for messages
-     * exchange (a name) where the message have been published.
-     * *directory* -- when mirroring a tree, start with a root where we want to write it
-
-     * *strip* -- Removes some levels of directories from the beginning of the relative path.
+  * broker (a url) the server the look for messages
+  * exchange (a name) where the message have been published.
+  * *directory* -- when mirroring a tree, start with a root where we want to write it
+  * *strip* -- Removes some levels of directories from the beginning of the relative path.
        Sometimes we want to copy only part of a tree, and some intervening directories 
        aren't relevant.
 
