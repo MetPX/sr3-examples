@@ -3,8 +3,13 @@
 Sarracenia 102: An Empty Data Pump in a Virtual Machine
 =======================================================
 
+This example directory contains setup information to make a standalone data pump,
+which can be used for other testing.  To prove it works, there are a number of 
+included tests that make it work well as a low-level practical introduction to and 
+demonstration of Sarracenia for advanced linux users.
 
-This is an low-level practical introduction to and demonstration of Sarracenia, for advanced linux users.
+No familiarity with Sarracenia or sr3 needed at all. This is a from-scratch introduction. However, to
+run this example yourself, you do need the following
 
 Pre-requisites:
 
@@ -19,6 +24,7 @@ Pre-requisites:
 
 * familiarity with linux command line. (ability to type shell commands.)
 
+Ignoring the pedagogical aspect, it can serve as a basis for building other configurations.
 
 Purpose of this Example
 -----------------------
@@ -1103,6 +1109,12 @@ Review
 
   * each file in those directories sets how a linux process (or group of them) will run.
   
+ * Sarracenia has logs in ~/.cache/sr3/log
+
+ * Sarracenis stores state in other files under ~/.cache/sr3/
+
+   *example: ~/.cache/sr3/subscribe/web_hungry/*retry*
+
 * there is a command line interface to working with the entire configuration tree at once:
 
   * **sr3 status**  - snapshot of what is currently going on.
