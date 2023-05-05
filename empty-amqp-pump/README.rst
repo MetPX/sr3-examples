@@ -9,6 +9,7 @@ to:
   * install metpx-sr3
   * install and configure a rabbitmq message broker.
   * have five basic rabbitmq/amqp users configured:
+
     * bunnymaster - admin of the rabbitmq broker
     * tfeed - for flows set up by pump administratos.
     * tsource - an account to publish files with
