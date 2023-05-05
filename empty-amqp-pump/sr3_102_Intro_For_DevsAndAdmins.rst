@@ -3,13 +3,13 @@
 Sarracenia 102: Introduction for Developers and Sys-Admins
 ==========================================================
 
-This example directory contains setup information to make a standalone data pump,
+This example directory contains setup information to make a standalone data pump
 which can be used for other testing.  To prove it works, there are a number of 
 included tests that make it work well as a low-level practical introduction to and 
 demonstration of Sarracenia for advanced linux users.
 
-No familiarity with Sarracenia or sr3 needed at all. This is a from-scratch introduction. However, to
-run this example yourself, you do need the following
+No familiarity with Sarracenia or sr3 needed at all. This is a from-scratch introduction. 
+However, to run this example yourself, you do need the following
 
 Pre-requisites:
 
@@ -22,16 +22,20 @@ Pre-requisites:
 * You can use your browser to access the ports on the virtual machine.
   (configuring firewalls or routing rules to enable this are outside the scope.)
 
-* familiarity with linux command line. (ability to type shell commands.)
+* comfort with linux command line usage.
 
-Ignoring the pedagogical aspect, it can serve as a basis for building other configurations.
+
+To just follow along, all you need is a reasonable familiarity with linux command 
+line. (ability to type shell commands.)
+
+
 
 Purpose of this Example
 -----------------------
 
 In many deployment cases, one can use sarracenia without a vm or a local broker.
 In fact deploying a broker is a fairly rare need, but to demonstrate what Sarracenia
-is, using a broker and a dedicated vm makes things much clearer.
+is, using a local broker in a dedicated vm makes things much clearer.
 
 Here is described how to configure an ubuntu 22.04 virtual machine as a data pump.
 In this example, you will see the simplest possible examples that demonstrate:

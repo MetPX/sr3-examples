@@ -18,7 +18,19 @@ to:
 
 To this empty data pump can be added a lot of other layers of functionality.
 
-To teach people about Sarracenia, can run through the accompanying 
-lessons:
+To teach people in depth about Sarracenia, one can run through the accompanying 
+tours:
 
-* `Sr3 102 Introduction for developers and system administrators <sr3_102_Intro_For_DevsAndAdmins>`_
+* `Sr3 102: Introduction for Developers and System Administrators <sr3_102_Intro_For_DevsAndAdmins.rst>`_
+
+Documentation:
+
+* All the options (the verbs in the configuration files) https://metpx.github.io/sarracenia/Reference/sr3_options.7.html
+
+* The command line: https://metpx.github.io/sarracenia/Reference/sr3.1.html
+
+* The missing sr3 101 course: https://metpx.github.io/sarracenia/Tutorials/1_CLI_introduction.html
+
+* Sarracenia/sr3 home page: https://metpx.github.io/sarracenia/
+
+
