@@ -391,9 +391,14 @@ the we post and subscribe
       /home/ubuntu/hungry/fruits/pears
       ubuntu@flow2:~/hungry$
 
+Notes:
 
-Because of *mirror off* for the fruits, they are no longer in sub-directories like 
-oranges, pears, apples, bananas.
+  * topics are server side, so they are applied first (order has no effect)
+
+  * accept is processed apply client-side, and the first match wins.
+
+  * Because of *mirror off* for the fruits, they are no longer in sub-directories like 
+    oranges, pears, apples, bananas.
 
     
 
@@ -401,7 +406,7 @@ Uploading/Noticing:
 
 * sr3_cpost
    * sleep > 0
-
+   * force_polling on (on cluster file systems)
 * watch
   * after_accept.
 

@@ -1145,6 +1145,7 @@ Review
   A publisher needs to choose how to publish a path to get the baseUrl and relPath right.
   its configuration would include options like:
 
+  * path - the path of the file (or directory) to be posted.
   * post_broker (a url) the server to publish to.
   * post_exchange (a name) a sort of named channel to publish messages to.
   * post_baseUrl - the baseUrl that will be in the message.
