@@ -128,6 +128,10 @@ Using subtopic
 Topic filtering reduces the number of unwanted messages downloaded by a client
 for Example:
 
+   ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 stop subscribe/hungry**
+
+      * stop the download subscription daemon.
+
    ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 cleanup subscribe/hungry**
 
       * discard the old queue contents, delete the old queue.
@@ -167,8 +171,7 @@ so when we start up the subscriber:
 
    ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ 
 
-will then download only the fruits directory from the all the directories posted by cpost.
-followed by:
+will then download only the fruits directory from the all the directories posted by cpost:
 
    ubuntu@flow2:~/sr3-examples/empty-amqp-pump$  **cd ~/hungry**
 
@@ -178,31 +181,113 @@ followed by:
 
     /home/ubuntu/hungry
     /home/ubuntu/hungry/fruits
-    /home/ubuntu/hungry/fruits/mango
+    /home/ubuntu/hungry/fruits/mango.qty
     /home/ubuntu/hungry/fruits/oranges
-    /home/ubuntu/hungry/fruits/oranges/blood
-    /home/ubuntu/hungry/fruits/oranges/mandarin
-    /home/ubuntu/hungry/fruits/oranges/clementine
-    /home/ubuntu/hungry/fruits/oranges/navel
-    /home/ubuntu/hungry/fruits/oranges/cara_cara
-    /home/ubuntu/hungry/fruits/oranges/valencia
+    /home/ubuntu/hungry/fruits/oranges/valencia.qty
+    /home/ubuntu/hungry/fruits/oranges/blood.jpg
+    /home/ubuntu/hungry/fruits/oranges/cara_cara.jpg
+    /home/ubuntu/hungry/fruits/oranges/clementine.qty
+    /home/ubuntu/hungry/fruits/oranges/mandarins.jpg
+    /home/ubuntu/hungry/fruits/oranges/clementines.jpg
+    /home/ubuntu/hungry/fruits/oranges/mandarin.qty
+    /home/ubuntu/hungry/fruits/oranges/cara_cara.qty
+    /home/ubuntu/hungry/fruits/oranges/blood.qty
+    /home/ubuntu/hungry/fruits/oranges/navel.qty
     /home/ubuntu/hungry/fruits/apples
-    /home/ubuntu/hungry/fruits/apples/macintosh_qc
-    /home/ubuntu/hungry/fruits/apples/empire_qc
-    /home/ubuntu/hungry/fruits/apples/empire
-    /home/ubuntu/hungry/fruits/apples/red_relicious
-    /home/ubuntu/hungry/fruits/apples/granny_smith
+    /home/ubuntu/hungry/fruits/apples/empire_qc.qty
+    /home/ubuntu/hungry/fruits/apples/granny_smith.jpg
+    /home/ubuntu/hungry/fruits/apples/empire.qty
+    /home/ubuntu/hungry/fruits/apples/granny_smith.qty
+    /home/ubuntu/hungry/fruits/apples/cortland.jpg
+    /home/ubuntu/hungry/fruits/apples/macinthosh_qc.qty
+    /home/ubuntu/hungry/fruits/apples/red_delicious.qty
     /home/ubuntu/hungry/fruits/bananas
-    /home/ubuntu/hungry/fruits/bananas/red_banana
-    /home/ubuntu/hungry/fruits/bananas/cavendish
-    /home/ubuntu/hungry/fruits/bananas/pisang_raja_indonesia
-    /home/ubuntu/hungry/fruits/bananas/plantain
-    /home/ubuntu/hungry/fruits/bananas/goldfinger
+    /home/ubuntu/hungry/fruits/bananas/cavendish.qty
+    /home/ubuntu/hungry/fruits/bananas/plantain.qty
+    /home/ubuntu/hungry/fruits/bananas/red_banana.qty
+    /home/ubuntu/hungry/fruits/bananas/goldfinger.qty
+    /home/ubuntu/hungry/fruits/bananas/pisang_raja_indonesia.qty
     /home/ubuntu/hungry/fruits/pears
-    /home/ubuntu/hungry/fruits/pears/asian
-    /home/ubuntu/hungry/fruits/pears/yellow_snow
-    /home/ubuntu/hungry/fruits/pears/bartlett
-    ubuntu@flow2:~/hungry$ 
+    /home/ubuntu/hungry/fruits/pears/asian.qty
+    /home/ubuntu/hungry/fruits/pears/yellow_snow.qty
+    /home/ubuntu/hungry/fruits/pears/bartlett.qty
+    ubuntu@flow2:~/hungry$
+
+So these are the files available in the fruits directory.
+
+* Most of these files are qty files.
+* if we are only interested in the images, we should reject the qty files.
+
+
+   ubuntu@flow2:~/hungry$ **rm -rf fruits**
+
+   ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 stop subscribe/hungry**
+
+      * stop the download subscription daemon.
+
+   ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 edit subscribe/hungry**
+
+      * add a line *reject .\*.qty*
+
+   ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 cleanup subscribe/hungry**
+
+      * discard the old queue contents, delete the old queue.
+
+   ubuntu@flow2:~/hungry$ **sr3 declare subscribe/hungry** ::
+
+     declare: 2023-05-08 17:50:28,196 13249 [INFO] root declare looking at subscribe/hungry
+     2023-05-08 17:50:28,196 13249 [INFO] root declare looking at subscribe/hungry
+     2023-05-08 17:50:28,212 13249 [INFO] sarracenia.moth.amqp __getSetup queue declared q_tsub_subscribe.hungry.34148622.02913293 (as: amqp://tsub@localhost/)
+     2023-05-08 17:50:28,212 13249 [INFO] sarracenia.moth.amqp __getSetup binding q_tsub_subscribe.hungry.34148622.02913293 with v03.post.fruits.# to xs_tsource_public (as: amqp://tsub@localhost/)
+
+   ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3_cpost -c my_feed -p ~/sr3-examples/empty-amqp-pump/sample**
+   
+      * post the files again.
+
+   If we now consult the management GUI, we shoould see on the order of 20 files in the queue.
+   like before.  If we then:
+
+   ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 start subscribe/hungry**
+
+      * start the download subscription daemon, with the new reject line.
+
+   ubuntu@flow2:~/hungry$ find `pwd`
+   /home/ubuntu/hungry
+   /home/ubuntu/hungry/fruits
+   /home/ubuntu/hungry/fruits/oranges
+   /home/ubuntu/hungry/fruits/oranges/blood.jpg
+   /home/ubuntu/hungry/fruits/oranges/cara_cara.jpg
+   /home/ubuntu/hungry/fruits/oranges/mandarins.jpg
+   /home/ubuntu/hungry/fruits/oranges/clementines.jpg
+   /home/ubuntu/hungry/fruits/apples
+   /home/ubuntu/hungry/fruits/apples/granny_smith.jpg
+   /home/ubuntu/hungry/fruits/apples/cortland.jpg
+   /home/ubuntu/hungry/fruits/bananas
+   /home/ubuntu/hungry/fruits/pears
+   ubuntu@flow2:~/hungry$ 
+
+
+So now we see that while there were >20 files queued on the broker, the subscriber only copied a handful of files,
+the ones that were not rejected.
+
+Accept/Reject Clauses
+~~~~~~~~~~~~~~~~~~~~~
+
+* Apply additional filtering to include or exclude files from the set to be transferred
+
+* work with full regular expressions, not just globbing or string matching.
+
+* Rather than being evaluated on the broker, done on the client (inside sarracenia programes.)
+  messages are downloaded prior to evaluation, but the files data is not (yet) transferred
+
+* The accept/reject clauses work on the full URL, that is, in this case, they would have see paths like:
+
+       file:/home/ubuntu/sr3-examples/empty-amqp-pump/sample/groceries/fruits/apples/cortland.jpg
+
+* are the main part of the *filter* in the sarracenia algorithm, that is part of the flow of each
+  sarracenia sr_subscribe process, 
+  
+
 
 
     
