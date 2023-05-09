@@ -325,7 +325,8 @@ same scope, affecting files accepted later in the file.
     directory ${HOME}/hungry/fruits
     accept .*fruits.*
 
-    directory ${HOME}/hungry/vegetables
+    mirror on
+    directory ${HOME}/hungry/
 
 We have turned off mirroring, and now want both fruits and vegetables in their
 own directories.
@@ -341,10 +342,12 @@ We can demonstrate that with another round:
 
    ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 edit subscribe/hungry**
 
+      * as illustrated above:
       * add line "subtopic vegetables.#
       * change mirror off
+      * add line "directory ${HOME}/hungry/fruits 
       * add line "accept .*/fruits/.*
-      * add line "directory ${HOME}/hungry/vegetables
+      * add line mirror on
 
    ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 cleanup subscribe/hungry**
 
@@ -372,9 +375,9 @@ the we post and subscribe
 
       /home/ubuntu/hungry
       /home/ubuntu/hungry/vegetables
-      /home/ubuntu/hungry/vegetables/vegetables
-      /home/ubuntu/hungry/vegetables/vegetables/onions.jpg
-      /home/ubuntu/hungry/vegetables/vegetables/shallots.jpg
+      /home/ubuntu/hungry/vegetables
+      /home/ubuntu/hungry/vegetables/onions.jpg
+      /home/ubuntu/hungry/vegetables/shallots.jpg
       /home/ubuntu/hungry/fruits
       /home/ubuntu/hungry/fruits/blood.jpg
       /home/ubuntu/hungry/fruits/cara_cara.jpg
@@ -389,8 +392,9 @@ the we post and subscribe
       ubuntu@flow2:~/hungry$
 
 
-One cand see that, while the fruits are all in the single fruit directory (because mirror off) the vegetables,
-are one directory deeper (mirror on.)
+Because of *mirror off* for the fruits, they are no longer in sub-directories like 
+oranges, pears, apples, bananas.
+
     
 
 Uploading/Noticing:
