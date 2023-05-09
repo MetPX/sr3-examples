@@ -389,7 +389,7 @@ the we post and subscribe
       ubuntu@flow2:~/hungry$
 
 
-One cand see that, while the fruits are all in the single fruit directory (because mirror off) the vegetables,
+One can see that, while the fruits are all in the single fruit directory (because mirror off) the vegetables,
 are one directory deeper (mirror on.)
     
 
