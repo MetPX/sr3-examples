@@ -107,10 +107,11 @@ The messages are in one line, here is a version with a few line breaks for reada
        "mode" : "664" 
    }
 
-In this message the relative path (from the "relPath" field) is "grains/bread/whole_wheat" ...  
+The path the subscriber will use to download is the concatenation of the *baseUrl* and and *relPath*
+fields. In this message the relative path (from the "relPath" field) is "grains/bread/whole_wheat" ...  
  
 * Topic will be: v03.post.grains.bread
-* whole_wheat is the file name
+* whole_wheat is the file name (only directories are in the topic)
 
 
 the subscriber has no information about the topic in it. but the default topicPrefix is v03.post,
@@ -287,18 +288,110 @@ Accept/Reject Clauses
 * are the main part of the *filter* in the sarracenia algorithm, that is part of the flow of each
   sarracenia sr_subscribe process, 
   
+* if a file is accepted, processing continues, and the corresponding file gets transferred.
 
 
+Multiple Directories 
+~~~~~~~~~~~~~~~~~~~~
 
+The configuration file is read from top to bottom, and some options can appear multiple
+times. If there are multiple *accept* and *reject* clauses, know that the first one
+to match the input URL will be actioned.
+
+The *directory* clause sets the root of stuff to be download, *for accept clauses that follow 
+it in the file* (or the end of file if there are none.) The mirror option works has the 
+same scope, affecting files accepted later in the file.
+
+ if we edit web_hungry to look like this ::
+
+    broker amqp://tsub@localhost
+
+    exchange xs_tsource_public
+
+    topicPrefix v03.post
+    subtopic fruits.#
+    subtopic vegetables.#
+
+    # print log messages for every file rejected.
+    logReject on
+
+    # make directories to match the source.
+    mirror off
+
+    reject .*\.qty
+
+    # root of the directory where files will be placed.
+
+    directory ${HOME}/hungry/fruits
+    accept .*fruits.*
+
+    directory ${HOME}/hungry/vegetables
+
+We have turned off mirroring, and now want both fruits and vegetables in their
+own directories.
+
+We can demonstrate that with another round:
+
+
+   ubuntu@flow2:~/hungry$ **rm -rf fruits**
+
+   ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 stop subscribe/hungry**
+
+      * stop the download subscription daemon.
+
+   ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 edit subscribe/hungry**
+
+      * add line "subtopic vegetables.#
+      * change mirror off
+      * add line "accept .*/fruits/.*
+      * add line "directory ${HOME}/hungry/vegetables
+
+   ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 cleanup subscribe/hungry**
+
+      * discard the old queue contents, delete the old queue.
+
+   ubuntu@flow2:~/hungry$ **sr3 declare subscribe/hungry** ::
+
+     declare: 2023-05-09 08:10:31,448 48412 [INFO] root declare looking at subscribe/hungry
+     2023-05-09 08:10:31,448 48412 [INFO] root declare looking at subscribe/hungry
+     2023-05-09 08:10:31,462 48412 [INFO] sarracenia.moth.amqp __getSetup queue declared q_tsub_subscribe.hungry.49018002.48697803 (as: amqp://tsub@localhost/)
+     2023-05-09 08:10:31,462 48412 [INFO] sarracenia.moth.amqp __getSetup binding q_tsub_subscribe.hungry.49018002.48697803 with v03.post.fruits.# to xs_tsource_public (as: amqp://tsub@localhost/)
+     2023-05-09 08:10:31,465 48412 [INFO] sarracenia.moth.amqp __getSetup binding q_tsub_subscribe.hungry.49018002.48697803 with v03.post.vegetables.# to xs_tsource_public (as: amqp://tsub@localhost/)
+
+the we post and subscribe
+
+   ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3_cpost -c my_feed -p ~/sr3-examples/empty-amqp-pump/sample**
+   
+      * post the files again.
+
+   ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 start subscribe/hungry**
+
+      * start the download subscription daemon, with the new reject line.
+
+   ubuntu@flow2:~/hungry$ find `pwd` ::
+
+      /home/ubuntu/hungry
+      /home/ubuntu/hungry/vegetables
+      /home/ubuntu/hungry/vegetables/vegetables
+      /home/ubuntu/hungry/vegetables/vegetables/onions.jpg
+      /home/ubuntu/hungry/vegetables/vegetables/shallots.jpg
+      /home/ubuntu/hungry/fruits
+      /home/ubuntu/hungry/fruits/blood.jpg
+      /home/ubuntu/hungry/fruits/cara_cara.jpg
+      /home/ubuntu/hungry/fruits/mandarins.jpg
+      /home/ubuntu/hungry/fruits/clementines.jpg
+      /home/ubuntu/hungry/fruits/granny_smith.jpg
+      /home/ubuntu/hungry/fruits/cortland.jpg
+      /home/ubuntu/hungry/fruits/oranges
+      /home/ubuntu/hungry/fruits/apples
+      /home/ubuntu/hungry/fruits/bananas
+      /home/ubuntu/hungry/fruits/pears
+      ubuntu@flow2:~/hungry$
+
+
+One cand see that, while the fruits are all in the single fruit directory (because mirror off) the vegetables,
+are one directory deeper (mirror on.)
     
-* Where messages come from
-  * broker
-  * exchange.
-* Message Structure.
-* Topics
-* paths
-* accept/reject
-* after_accept
 
 Uploading/Noticing:
 
