@@ -400,6 +400,23 @@ Notes:
   * Because of *mirror off* for the fruits, they are no longer in sub-directories like 
     oranges, pears, apples, bananas.
 
+
+Variables/Patterns
+------------------
+
+  * ${var}  - environment variables can be used in configuration files.
+  * declare env=value  - can have configuration file set environment variables.
+  * built-ins:
+    * BROKER_USER (AMQP username)
+    * PROGRAM - (cpost, subscribe, sarra, etc...)
+    * BD  - baseDir
+    * baseUrlPath or BUP -- baseUrlPath - The path part of the baseURL.
+    * baseUrlPathLast or BUPL -- the last part of BUP
+    * PBD - postBaseDir 
+    * any string option value in the configuration.
+
+  * ${%Y%m%d} - python strftime strings can be used to substitute date strings.
+  * ${%Y%m%d-1d} - can subtract an interval from a formatted day, (e.g. yesterday.)
     
 
 Uploading/Noticing:
