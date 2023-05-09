@@ -370,40 +370,178 @@ the we post and subscribe
 
    ubuntu@flow2:~/hungry$ find `pwd` ::
 
-      /home/ubuntu/hungry
-      /home/ubuntu/hungry/vegetables
-      /home/ubuntu/hungry/vegetables/vegetables
-      /home/ubuntu/hungry/vegetables/vegetables/onions.jpg
-      /home/ubuntu/hungry/vegetables/vegetables/shallots.jpg
-      /home/ubuntu/hungry/fruits
-      /home/ubuntu/hungry/fruits/blood.jpg
-      /home/ubuntu/hungry/fruits/cara_cara.jpg
-      /home/ubuntu/hungry/fruits/mandarins.jpg
-      /home/ubuntu/hungry/fruits/clementines.jpg
-      /home/ubuntu/hungry/fruits/granny_smith.jpg
-      /home/ubuntu/hungry/fruits/cortland.jpg
-      /home/ubuntu/hungry/fruits/oranges
-      /home/ubuntu/hungry/fruits/apples
-      /home/ubuntu/hungry/fruits/bananas
-      /home/ubuntu/hungry/fruits/pears
-      ubuntu@flow2:~/hungry$
+     /home/ubuntu/hungry
+     /home/ubuntu/hungry/vegetables
+     /home/ubuntu/hungry/vegetables/brussel_sprouts.qty
+     /home/ubuntu/hungry/vegetables/boston_lettuce.qty
+     /home/ubuntu/hungry/vegetables/tomatoes.qty
+     /home/ubuntu/hungry/vegetables/roots
+     /home/ubuntu/hungry/vegetables/roots/garlic.qty
+     /home/ubuntu/hungry/vegetables/roots/chives.qty
+     /home/ubuntu/hungry/vegetables/roots/potatoes
+     /home/ubuntu/hungry/vegetables/roots/potatoes/idaho_red.qty
+     /home/ubuntu/hungry/vegetables/roots/potatoes/cavendish.qty
+     /home/ubuntu/hungry/vegetables/roots/potatoes/irish.qty
+     /home/ubuntu/hungry/vegetables/roots/potatoes/sweet.qty
+     /home/ubuntu/hungry/vegetables/roots/carrots.qty
+     /home/ubuntu/hungry/vegetables/roots/onions.jpg
+     /home/ubuntu/hungry/vegetables/roots/onions.qty
+     /home/ubuntu/hungry/vegetables/roots/shallots.jpg
+     /home/ubuntu/hungry/vegetables/roots/potatoes.qty
+     /home/ubuntu/hungry/vegetables/roots/shallots.qty
+     /home/ubuntu/hungry/vegetables/broccoli.qty
+     /home/ubuntu/hungry/vegetables/spinach.qty
+     /home/ubuntu/hungry/fruits
+     /home/ubuntu/hungry/fruits/valencia.qty
+     /home/ubuntu/hungry/fruits/cavendish.qty
+     /home/ubuntu/hungry/fruits/plantain.qty
+     /home/ubuntu/hungry/fruits/asian.qty
+     /home/ubuntu/hungry/fruits/empire_qc.qty
+     /home/ubuntu/hungry/fruits/yellow_snow.qty
+     /home/ubuntu/hungry/fruits/blood.jpg
+     /home/ubuntu/hungry/fruits/cara_cara.jpg
+     /home/ubuntu/hungry/fruits/red_banana.qty
+     /home/ubuntu/hungry/fruits/clementine.qty
+     /home/ubuntu/hungry/fruits/mandarins.jpg
+     /home/ubuntu/hungry/fruits/clementines.jpg
+     /home/ubuntu/hungry/fruits/bartlett.qty
+     /home/ubuntu/hungry/fruits/granny_smith.jpg
+     /home/ubuntu/hungry/fruits/mango.qty
+     /home/ubuntu/hungry/fruits/empire.qty
+     /home/ubuntu/hungry/fruits/granny_smith.qty
+     /home/ubuntu/hungry/fruits/mandarin.qty
+     /home/ubuntu/hungry/fruits/cortland.jpg
+     /home/ubuntu/hungry/fruits/oranges
+     /home/ubuntu/hungry/fruits/apples
+     /home/ubuntu/hungry/fruits/cara_cara.qty
+     /home/ubuntu/hungry/fruits/macinthosh_qc.qty
+     /home/ubuntu/hungry/fruits/blood.qty
+     /home/ubuntu/hungry/fruits/goldfinger.qty
+     /home/ubuntu/hungry/fruits/red_delicious.qty
+     /home/ubuntu/hungry/fruits/bananas
+     /home/ubuntu/hungry/fruits/pisang_raja_indonesia.qty
+     /home/ubuntu/hungry/fruits/navel.qty
+     /home/ubuntu/hungry/fruits/pears
+     ubuntu@flow:~/hungry$ 
 
 
 One can see that, while the fruits are all in the single fruit directory (because mirror off) the vegetables,
-are one directory deeper (mirror on.)
+are still in multiple ones (mirror on.)
     
 
-Uploading/Noticing:
+Uploading/Noticing
+------------------
 
-* sr3_cpost
-   * sleep > 0
+There are many different ways to create download messages to start files circulating in a Sarracenia
+network.
 
-* watch
-  * after_accept.
+   * sr3_cpost - post a file, or watch a directory (C-binary)
+   * sr3_post - post a file (python script.)
+   * sr3_watch - watch a directory (python)
+   * sr3_poll - poll a remote directory or web resource. 
+   * sr3 flow - for doing weird things.
 
-* poll
 
-* flow
+
+userdir/sr_cpost
+~~~~~~~~~~~~~~~~
+
+So far, we have used sr3_cpost, a one-shot binary to post messages about file given on the
+command line. One can also use the same binary as a service daemon to watch a directory by adding the *sleep* 
+directive.
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 edit cpost/my_feed** ::
+
+    post_broker amqp://tsource@localhost
+    post_exchange xs_tsource_public
+    #post_baseUrl file:/
+
+    # for later...
+    #post_baseUrl file:${HOME}/sr3-examples/empty-amqp-pump/sample/groceries
+    #
+    sleep 5
+    path ${HOME}/public_html
+    post_baseUrl http://localhost/~${USER}
+    post_baseDir ${HOME}/public_html
+
+Now have:
+
+  * added *sleep 5* which means it should sleep for at most 5 seconds before noticing a file.  
+  * We moved the -p argument into the configuration file as the *path* and it is going to monitor the ${HOME}/feed directory.  
+  * changed post_baseUrl to be appropriate for the new location.
+
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 edit cpost/my_feed** 
+
+    * comment out the old post_baseUrl
+    * add new line: sleep 5
+    * add new line: path ${HOME}/public_html
+    * add new line: post_baseUrl http://localhost/~${USER}
+    * add new line: post_baseDir ${HOME}/public_html
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sudo apt install apache2**
+
+   * ensure apache is installed. (if not done before.)
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sudo a2enmod userdir** ::
+
+     Enabling module userdir.
+     To activate the new configuration, you need to run:
+       systemctl restart apache2
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sudo systemctl restart apache2**
+
+     * activate userdir support in apache.
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **mkdir ~/public_html ~/web_hungry**
+
+     * make a userdir for posting, 
+     * make web_hungry for a downloading subscriber.
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **chmod +x ~ ~/public_html**
+
+     * allow apache daemon read access to userdir ( aka ~/public_html )
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$  **sr3 start cpost/my_feed subscribe/web_hungry**
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$  **cd ~/public_html**
+  
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$  **echo hello >1stFile**
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$  **echo bonjour >2ndFile**
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$  **echo hola >3rdFile**
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$  **echo GutenMorgen >4thFile**
+
+  ubuntu@flow2:~/sr3-examples/empty-amqp-pump$  **ls ~/web_hungry** ::
+
+    ubuntu@flow:~/.cache/sr3/log$ ls -al ~/web_hungry
+    total 40
+    drwxrwxr-x  2 ubuntu ubuntu 4096 May  9 15:57 .
+    drwxr-x--x 12 ubuntu ubuntu 4096 May  9 15:33 ..
+    -rw-rw-r--  1 ubuntu ubuntu    6 May  9 15:35 1stFile
+    -rw-rw-r--  1 ubuntu ubuntu    8 May  9 15:35 2ndFile
+    -rw-rw-r--  1 ubuntu ubuntu    5 May  9 15:35 3rdFile
+    -rw-rw-r--  1 ubuntu ubuntu   12 May  9 15:35 4thFile
+    ubuntu@flow:~/.cache/sr3/log$ 
+
+We can see that the file was made available in ~/publc_html and was copied to ~/web_hungry.
+
+
+Polling a Web Site
+~~~~~~~~~~~~~~~~~~
+
+Most sites are not Sarracenia enabled, meaning they don't produce messages for each file they
+publish. To get messages created, so that subscribers can start downloading their files,
+we can use sr_poll.
+
+From sr3_102, we have content in /var/www/html/data.
+
+
+
+
+
 
 * flow/scheduled.
 
