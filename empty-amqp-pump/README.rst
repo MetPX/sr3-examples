@@ -27,12 +27,13 @@ Documentation:
 
 * All the options (the verbs in the configuration files) https://metpx.github.io/sarracenia/Reference/sr3_options.7.html
 
+  * Variable available in configuration files: https://metpx.github.io/sarracenia/Reference/sr3_options.7.html#variables
+
 * The command line: https://metpx.github.io/sarracenia/Reference/sr3.1.html
 
 * The missing sr3 101 course: https://metpx.github.io/sarracenia/Tutorials/1_CLI_introduction.html
 
 * Sarracenia/sr3 home page: https://metpx.github.io/sarracenia/
-
 
 
 image credits:

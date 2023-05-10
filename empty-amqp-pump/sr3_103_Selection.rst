@@ -540,6 +540,13 @@ Now have:
 
 We can see that the file was made available in ~/publc_html and was copied to ~/web_hungry.
 
+Note that to watch directories:
+
+   * sr3 watch is the python implementation of sr3_cpost, uses the same configuration files
+     but provides added flexibility
+   * The *force_polling* flag is needed on cluster file systems.
+   * There are different methods available for different volumes of files:
+     https://metpx.github.io/sarracenia/Explanation/DetectFileReady.html
 
 Polling a Web Site
 ~~~~~~~~~~~~~~~~~~
@@ -551,39 +558,11 @@ we can use sr_poll.
 From sr3_102, we have content in /var/www/html/data.
 
 
+
 * sr3_cpost
-   * sleep > 0
-   * force_polling on (on cluster file systems)
+
 * watch
   * after_accept.
 
 * flow/scheduled.
-
-Variables/Patterns
-------------------
-
-  ( https://metpx.github.io/sarracenia/Reference/sr3_options.7.html#variables )
-
-  * ${var}  - environment variables can be used in configuration files.
-  * declare env=value  - can have configuration file set environment variables.
-  * built-ins:
-
-    * baseDir or BD  - baseDir
-    * baseUrlPath or BUP -- baseUrlPath - The path part of the baseURL.
-    * baseUrlPathLast or BUPL -- the last part of BUP
-    * BROKER_USER (AMQP username)
-    * PROGRAM - (cpost, subscribe, sarra, etc...)
-    * CONFIG - the configuration being run.
-    * HOSTNAME - that is running this program.
-    * RA
-    
-    * PBD - postBaseDir 
-    * any string option value in the configuration.
-
-  Date/time:
-
-  * ${%Y%m%d} - python strftime strings can be used to substitute date strings.
-  * ${%Y%m%d-1d} - can subtract an interval from a formatted day, (e.g. yesterday.)
-
-
 
