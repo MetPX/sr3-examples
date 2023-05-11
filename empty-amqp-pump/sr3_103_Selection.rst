@@ -542,11 +542,12 @@ We can see that the file was made available in ~/publc_html and was copied to ~/
 
 Note that to watch directories:
 
-   * sr3 watch is the python implementation of sr3_cpost, uses the same configuration files
-     but provides added flexibility
-   * The *force_polling* flag is needed on cluster file systems.
+   * watch is the python implementation of cpost, uses the same configuration files
+     but has more features and plugin support.
+   * The *force_polling* flag is needed on cluster file systems, is much less efficient.
    * There are different methods available for different volumes of files:
      https://metpx.github.io/sarracenia/Explanation/DetectFileReady.html
+
 
 Polling a Web Site
 ~~~~~~~~~~~~~~~~~~
@@ -557,9 +558,106 @@ we can use sr_poll.
 
 From sr3_102, we have content in /var/www/html/data.
 
+  ubuntu@flow:~/.cache/sr3/log$ **mkdir ~/.config/sr3/poll**
+  
+  ubuntu@flow:~/.cache/sr3/log$ **cp ~/.config/sr3/cpost/my_feed.conf ~/.config/sr3/poll/web**
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 edit poll/web** ::
+
+    post_broker amqp://tsource@localhost
+    post_exchange xs_tsource_public
+
+    sleep 5
+
+    pollUrl http://10.110.41.87
+
+    path data
+
+    post_baseUrl http://10.110.41.87
 
 
-* sr3_cpost
+Every 5 seconds, send an http query to ip address 10.110.41.87, and issue a "GET /data" request.
+The response expected is a list of files (in HTML) use the python standard HTML parser to 
+extract the file information, and create messages from it to retrieve the corresponding files.
+
+We can use the original subscriber/hungry to download from this poll.  
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 edit subscribe/hungry** ::
+
+    broker amqp://tsub@localhost
+
+    exchange xs_tsource_public
+
+    subtopic #
+
+    # print log messages for every file rejected.
+    logReject on
+
+    # make directories to match the source.
+    mirror
+
+    # root of the directory where files will be placed.
+    directory ${HOME}/hungry
+
+removing topics because the new files won't be in the same folders.
+
+make some data ::
+
+    cd /var/www/html/data
+    rm -rf *
+    mkdir pigs chickens cats dogs
+    echo '1' >pigs/toto
+    echo one >dogs/fido
+    echo two >dogs/lassie
+    echo etwtr >dogs/spot
+    echo miaou >cats/felix
+    echo how >cats/sylvester
+    echo chow >cats/garfield
+
+then we can start things up:
+ 
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 stop poll/web subscribe/hungry** ::
+      Stopping: no procs running...already stopped
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 --dangerWillRobinson cleanup poll/web subscribe/hungry** ::
+
+      cleanup: 2023-05-10 16:36:52,577 24026 [INFO] sarracenia.moth.amqp getCleanUp deleteing queue q_tsub_subscribe.hungry.91587237.27237369
+     remove q_tsub_subscribe.hungry.91587237.27237369 from xs_tsource_public subscribers: ['q_tsub_sarra.web_feed.82439790.80718169', 'q_tsub_subscribe.hungry.91587237.27237369']
+     removing state file: /home/ubuntu/.cache/sr3/subscribe/hungry/subscribe_hungry_00.metrics
+     removing state file: /home/ubuntu/.cache/sr3/subscribe/hungry/subscribe.hungry.tsub.qname
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 declare poll/web subscribe/hungry** ::
+
+      declare: 2023-05-10 16:37:22,938 24061 [INFO] root declare looking at poll/web
+      2023-05-10 16:37:22,941 24061 [INFO] sarracenia.moth.amqp __putSetup exchange declared: xs_tsource_public (as: amqp://tsource@localhost/)
+      2023-05-10 16:37:22,942 24061 [INFO] root declare looking at subscribe/hungry
+      2023-05-10 16:37:22,942 24061 [INFO] root declare looking at poll/web
+      2023-05-10 16:37:22,942 24061 [INFO] root declare looking at subscribe/hungry
+      2023-05-10 16:37:22,947 24061 [INFO] sarracenia.moth.amqp __getSetup queue declared q_tsub_subscribe.hungry.20777263.97761082 (as: amqp://tsub@localhost/)
+      2023-05-10 16:37:22,947 24061 [INFO] sarracenia.moth.amqp __getSetup binding q_tsub_subscribe.hungry.20777263.97761082 with v03.# to xs_tsource_public (as: amqp://tsub@localhost/)
+
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 start poll/web subscribe/hungry** ::
+
+      starting:.( 2 ) Done
+
+  ubuntu@flow:~/.cache/sr3/log$ **find ~/hungry** ::
+
+      /home/ubuntu/hungry
+      /home/ubuntu/hungry/data
+      /home/ubuntu/hungry/data/pigs
+      /home/ubuntu/hungry/data/pigs/toto
+      /home/ubuntu/hungry/data/cats
+      /home/ubuntu/hungry/data/cats/sylvester
+      /home/ubuntu/hungry/data/cats/felix
+      /home/ubuntu/hungry/data/cats/garfield
+      /home/ubuntu/hungry/data/dogs
+      /home/ubuntu/hungry/data/dogs/fido
+      /home/ubuntu/hungry/data/dogs/spot
+      /home/ubuntu/hungry/data/dogs/lassie
+      /home/ubuntu/hungry/data/chickens
+
+  ubuntu@flow:~/.cache/sr3/log$ 
+
 
 * watch
   * after_accept.
