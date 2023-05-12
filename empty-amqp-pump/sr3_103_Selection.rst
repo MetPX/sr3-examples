@@ -553,7 +553,9 @@ Polling a Web Site
 ~~~~~~~~~~~~~~~~~~
 
 Most sites are not Sarracenia enabled, meaning they don't produce messages for each file they
-publish. To get messages created, so that subscribers can start downloading their files,
+publish. They will produce a directory or a query API of some kind, and one must issue
+queries of a directory listing to learn which new files are available.
+To get messages created, so that subscribers can start downloading their files,
 we can use sr_poll.
 
 From sr3_102, we have content in /var/www/html/data.
@@ -617,7 +619,9 @@ make some data ::
 then we can start things up:
  
   ubuntu@flow:~/.cache/sr3/log$ **sr3 stop poll/web subscribe/hungry** ::
+
       Stopping: no procs running...already stopped
+
   ubuntu@flow:~/.cache/sr3/log$ **sr3 --dangerWillRobinson cleanup poll/web subscribe/hungry** ::
 
       cleanup: 2023-05-10 16:36:52,577 24026 [INFO] sarracenia.moth.amqp getCleanUp deleteing queue q_tsub_subscribe.hungry.91587237.27237369
@@ -659,8 +663,76 @@ then we can start things up:
   ubuntu@flow:~/.cache/sr3/log$ 
 
 
-* watch
-  * after_accept.
+Scheduled Polls
+---------------
 
-* flow/scheduled.
+Sometimes the API provided by a remote source is such that you just issue the 
+same query over and over again, rather than obtaining a list of new products.
 
+A *flow* component has no built-in behaviour. Any other component's behaviour can be built
+from a flow, just by adding settings and callbacks. 
+
+get other things out of the way:
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 stop** 
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 edit flow/scheduled_noaa_tsunami** ::
+
+
+      post_broker amqp://tfeed@localhost/
+      post_exchange xs_NOAA-TSUNAMI_public
+
+      #FIXME short interval for testing.
+      scheduled_interval 10
+      #scheduled_interval 60
+
+      nodupe_ttl false
+
+      logEvents all
+      logMessageDump on
+
+      callback scheduled
+
+      callback post.message
+
+      post_baseUrl https://www.tsunami.gov/events/xml/
+
+      path PAAQAtom.xml
+
+      path PHEBAtom.xml
+
+  edit:
+
+    * Use the shorter scheduled_interval ... *scheduled_interval 10* (seconds)
+    * nodupe_ttl false, because the content will change every time we poll
+    * *callback scheduled* is plugin to create messages on a schedule.
+    * *clalback post.message* is a plugin to post the messsages created
+
+
+
+  ubuntu@flow:~/.cache/sr3/log$ **mkdir ~/tsunami**
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 cleanup subscribe/tsunami** ::
+      cleanup: 2023-05-11 08:32:06,189 63614 [INFO] sarracenia.moth.amqp getCleanUp deleteing queue q_tsub_subscribe.tsunami.20777263.97761082
+      remove q_tsub_subscribe.tsunami.20777263.97761082 from xs_tsource_public subscribers: ['q_tsub_sarra.web_feed.82439790.80718169', 'q_tsub_subscribe.tsunami.20777263.97761082'] 
+      removing state file: /home/ubuntu/.cache/sr3/subscribe/tsunami/subscribe.tsunami.tsub.qname
+      removing state file: /home/ubuntu/.cache/sr3/subscribe/tsunami/subscribe_tsunami_01.metrics
+
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 declare flow/scheduled_noaa_tsunami subscribe/tsunami**  ::
+  
+      declare: 2023-05-11 08:43:08,228 64091 [INFO] root declare looking at flow/scheduled_noaa_tsunami
+      2023-05-11 08:43:08,243 64091 [INFO] sarracenia.moth.amqp __putSetup exchange declared: xs_NOAA-TSUNAMI_public (as: amqp://tfeed@localhost/)
+      2023-05-11 08:43:08,244 64091 [INFO] root declare looking at subscribe/tsunami
+      2023-05-11 08:43:08,244 64091 [INFO] root declare looking at flow/scheduled_noaa_tsunami
+      2023-05-11 08:43:08,244 64091 [INFO] root declare looking at subscribe/tsunami
+      2023-05-11 08:43:08,246 64091 [INFO] sarracenia.moth.amqp __getSetup queue declared q_tsub_subscribe.tsunami.78732907.90128907 (as: amqp://tsub@localhost/)
+      2023-05-11 08:43:08,246 64091 [INFO] sarracenia.moth.amqp __getSetup binding q_tsub_subscribe.tsunami.78732907.90128907 with v03.# to xs_NOAA-TSUNAMI_public (as: amqp://tsub@localhost/)
+
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 start flow/scheduled_noaa_tsunami subscribe/tsunami**
+      Starting:.( 2 ) Done
+
+  ubuntu@flow:~/.cache/sr3/log$ **find ~/tsunami**
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 stop flow/scheduled_noaa_tsunami subscribe/tsunami**
