@@ -10,9 +10,10 @@ Downloading
 Setup
 ~~~~~
 
-1. create an empty ubuntu 22.04 VM.
+1. create an empty ubuntu 22.04 VM. 
 
-   * Follow the recip <README.rst> for create an empty data pump.
+   * Follow the recipe from <README.rst> for create an empty data pump.
+     https://github.com/MetPX/sr3-examples/tree/main/empty-amqp-pump
 
    * note the ip of the vm, and open a browser window on the management GUI (port 15672)
      the password for the bunnymaster user is in ~/.config/sr3/credentials.conf
@@ -139,7 +140,6 @@ for Example:
 
    ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 edit subscribe/hungry**
 
-      * add a line *topicPrefix v03.post*
       * add a line *subtopic fruits.#* 
 
    so that the hungry subscription is only interested in getting fruits
@@ -733,6 +733,182 @@ get other things out of the way:
   ubuntu@flow:~/.cache/sr3/log$ **sr3 start flow/scheduled_noaa_tsunami subscribe/tsunami**
       Starting:.( 2 ) Done
 
-  ubuntu@flow:~/.cache/sr3/log$ **find ~/tsunami**
+  ubuntu@flow:~/.cache/sr3/log$ **ls ~/tsunami** ::
 
-  ubuntu@flow:~/.cache/sr3/log$ **sr3 stop flow/scheduled_noaa_tsunami subscribe/tsunami**
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:44 PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:44 PHEBAtom.xml
+
+  ubuntu@flow:~/.cache/sr3/log$
+  
+This file is being downloaded and overwritten every 10 seconds. To make the downloads
+more visible, one prepend a date stamp to it.
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 edit flow/scheduled_noaa_tsunami subscribe/tsunami**
+
+     * remote the # before *callback prepend_datetime* to activate that plugin
+
+
+Let's take a look at this new callback. There are a number of callbacks included with Sarracenia,
+but custom ones can be added in the ~/.config/sr3/plugins directory. This directory is added
+to PYTHONPATH (the module search path in python) and imported as any other python module.
+
+   ubuntu@flow:~/.cache/sr3/log$ **vi ~/.config/sr3/plugins/prepend_datetimestamp.py** ::
+
+      import datetime
+      import logging
+      import paramiko
+      import re
+      import sarracenia
+      from sarracenia.flowcb import FlowCB
+      import time
+      from urllib.parse import urlparse
+
+      logger = logging.getLogger(__name__)
+
+
+      class Prepend_datetimestamp(FlowCB):
+
+          def after_accept(self, worklist):
+
+              for m in worklist.incoming:
+                  file_name = m['new_file']
+                  yyyymmddHHMMSS = time.strftime("%Y%m%d%H%M%S", time.gmtime())
+                  m['new_file'] = yyyymmddHHMMSS + '_' + file_name
+
+Callbacks are python classes which have well-known entry points.  In this example,
+the *after_accept* entry point is used, which is called after all accept/reject 
+options have been evaluated. The routing takes the worklist as a parameter.
+The rejected messages are in *worklist.rejected*, and the accepted ones are 
+in *worklist.incoming.*
+
+worklist.incoming is a list of messages, each of which is a python dictionary.
+There fields in the dictionaries are the headers in the messages.  To change
+the name of the file downloaded, for example, modify *m['new_file']*
+
+
+notes:
+
+  * main class documentation: https://metpx.github.io/sarracenia/Reference/flowcb.html#module-sarracenia.flowcb
+  * Sarracenia Plugin/Programming Guide: https://metpx.github.io/sarracenia/Explanation/SarraPluginDev.html
+
+
+  ubuntu@flow:~/.cache/sr3/log$ **sr3 restart subscribe/tsunami** ::
+
+      stopping: sending SIGTERM  ( 0 ) Done
+      Waiting 1 sec. to check if 1 processes stopped (try: 0)
+      All stopped after try 0
+      starting: .( 1 ) Done
+
+      
+  ubuntu@flow:~/.cache/sr3/log$ **ls -al ~/tsunami** ::
+
+      total 136
+      drwxrwxr-x  2 ubuntu ubuntu 4096 May 12 08:47 .
+      drwxr-x--x 12 ubuntu ubuntu 4096 May 12 08:45 ..
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:45 20230512124539_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:45 20230512124539_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:45 20230512124549_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:45 20230512124549_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:45 20230512124557_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:45 20230512124557_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:46 20230512124606_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:46 20230512124606_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:46 20230512124617_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:46 20230512124617_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:46 20230512124625_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:46 20230512124625_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:46 20230512124636_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:46 20230512124636_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:46 20230512124646_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:46 20230512124646_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:46 20230512124656_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:46 20230512124656_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:47 20230512124707_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:47 20230512124707_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:47 20230512124716_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:47 20230512124716_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:47 20230512124727_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:47 20230512124727_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:47 20230512124735_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:47 20230512124735_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:47 20230512124746_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:47 20230512124746_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:47 20230512124757_PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:47 20230512124757_PHEBAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1983 May 12 08:44 PAAQAtom.xml
+      -rw-rw-r--  1 ubuntu ubuntu 1945 May 12 08:44 PHEBAtom.xml
+
+  ubuntu@flow:~/.cache/sr3/log$
+
+About Atom Feeds
+----------------
+
+This example demonstrates a disadvantage of Atom feeds when compared with pub/sub methods.
+From this we can calculate the load of keeping up with an Atom (aka RSS) feed with a 10 second 
+frequency, 3928 bytes (the two files) multiply 8 to get bits and divide by 10 for a per second rate, 
+we get:
+
+   * 3228*8/10/1024 = 2.5 kbits/second.
+
+Note that all of the files are the same, because there is no change in the warning status.
+so that means we are transferring:
+
+   * 2.5 kbps * 60 * 60 * 24 / 1024 / 8 = 26 megabytes / day
+
+to know that there are no warnings (which is the usual case, as tsunamis are fairly infrequent.)  
+If the time sensitivity goes up (poling every second) then the overhead increases exponentially
+(It is 10x more transfer for a 10x increase in polling frequency.)
+
+Note that in the data pump case, we are often not dealing with only a single download case, but 
+rather downloading on behalf of and entire group of servers or an entire organization.
+
+This traffic needs to be forwarded to every consumer of the message, so if we need to distribute the data
+to ten clients (which is a reasonable real-world value for us), then the traffic to distribute
+this information is ten-fold the calculation above.
+
+
+Review
+------
+
+1. in a configuration file:
+
+ * *topicPrefix* used to select message format (many pumps use v02.post)
+ * *subtopic* is used to add **server-side filtering** narrowing down the messages which are
+   queued for a subscriber.
+ * *directory* defines the root directory of the tree where files are written.
+ * *accept/reject* accept regular expressions that are matched against the download URL.
+ * multiple *directory + accept* lines in the configuration files can put different products
+   in different directories
+
+2. There are many ways to create a post for a file:
+
+There are different methods available for different volumes of files. A view of some different
+options is here:
+
+     https://metpx.github.io/sarracenia/Explanation/DetectFileReady.html
+
+briefly:
+
+ * sr3_cpost (sleep=0 or foreground) and sr3_post one shot commands to post files.
+
+ * sr3_cpost (sleep > 0 ) or sr3 watch to service daemons to watch trees and post files that show up.
+
+ * sr3 poll ... query a remote system for new items available to download into files.
+
+ * sr3 flow ... roll your own way to notice things to post.
+
+    * flowcb.scheduled ... to make messages so subscribers can download the same url over and over.
+
+There is another last posting method left to later (shim) ;-)
+
+
+3. There is a python plugin api.
+
+  * plugins are python classes in python module files, imported with normal python mechanisms.
+  * main class documentation: https://metpx.github.io/sarracenia/Reference/flowcb.html#module-sarracenia.flowcb
+  * Sarracenia Plugin/Programming Guide: https://metpx.github.io/sarracenia/Explanation/SarraPluginDev.html
+  * plugins are activated with the *callback* option in the configuration file.
+  * ~/.config/sr3/plugins is added to PYTHONPATH as a location to search for plugins.
+  * We examined a plugin to prefix the names of files being downloaded with a date stamp.
+    
+    * after_accept is the most common entry point used, often to change file naming, 
