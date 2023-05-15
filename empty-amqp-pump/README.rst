@@ -2,6 +2,12 @@
 
 Given an empty Ubuntu 22.04 (or later) run  the script here:
 
+ sudo apt update
+ sudo apt upgrade
+ git clone https://github.com/MetPX/sr3-examples/
+
+ cd sr3-examples/empty-amqp-pump
+
  ./rabbitmq_pump_setup.sh
 
 to:
@@ -22,6 +28,7 @@ To teach people in depth about Sarracenia, one can run through the accompanying
 tours:
 
 * `Sr3 102: Introduction for Developers and System Administrators <sr3_102_Intro_For_DevsAndAdmins.rst>`_
+* `Sr3 103: Selecting Files for Processing <sr3_103_Selection.rst>`_
 
 Documentation:
 
