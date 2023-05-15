@@ -562,7 +562,7 @@ From sr3_102, we have content in /var/www/html/data.
 
   ubuntu@flow:~/.cache/sr3/log$ **mkdir ~/.config/sr3/poll**
   
-  ubuntu@flow:~/.cache/sr3/log$ **cp ~/.config/sr3/cpost/my_feed.conf ~/.config/sr3/poll/web**
+  ubuntu@flow:~/.cache/sr3/log$ **cp ~/.config/sr3/cpost/my_feed.conf ~/.config/sr3/poll/web.conf**
 
   ubuntu@flow:~/.cache/sr3/log$ **sr3 edit poll/web** ::
 

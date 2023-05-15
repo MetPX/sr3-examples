@@ -34,7 +34,14 @@ Documentation:
 
 * All the options (the verbs in the configuration files) https://metpx.github.io/sarracenia/Reference/sr3_options.7.html
 
-  * Variable available in configuration files: https://metpx.github.io/sarracenia/Reference/sr3_options.7.html#variables
+  * to find any standard option, go to the above link and search in the page.
+  * some options are defined by the callbacks that implement them.  You may need to look
+    in the callback routines' pages for information about those, for example:
+
+    * https://metpx.github.io/sarracenia/Reference/flowcb.html#module-sarracenia.flowcb.nodupe
+    * https://metpx.github.io/sarracenia/Reference/flowcb.html#module-sarracenia.flowcb.scheduled
+
+  * Variables you can reference in configuration files: https://metpx.github.io/sarracenia/Reference/sr3_options.7.html#variables
 
 * The command line: https://metpx.github.io/sarracenia/Reference/sr3.1.html
 
