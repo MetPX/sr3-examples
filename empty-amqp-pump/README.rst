@@ -3,7 +3,9 @@
 Given an empty Ubuntu 22.04 (or later) run  the script here:
 
  sudo apt update
+
  sudo apt upgrade
+
  git clone https://github.com/MetPX/sr3-examples/
 
  cd sr3-examples/empty-amqp-pump
