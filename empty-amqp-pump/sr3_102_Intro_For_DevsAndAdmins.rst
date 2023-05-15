@@ -1145,6 +1145,7 @@ Review
   A publisher needs to choose how to publish a path to get the baseUrl and relPath right.
   its configuration would include options like:
 
+  * path - the path of the file (or directory) to be posted.
   * post_broker (a url) the server to publish to.
   * post_exchange (a name) a sort of named channel to publish messages to.
   * post_baseUrl - the baseUrl that will be in the message.
@@ -1170,12 +1171,18 @@ Review
 
   * broker (a url) the server the look for messages
   * exchange (a name) where the message have been published.
+  * topicPrefix (series of dot separated names.) either 
+    
+      * v02.post (most current sources), or 
+      * v03 (newer sources)
   * *directory* -- when mirroring a tree, start with a root where we want to write it
   * *strip* -- Removes some levels of directories from the beginning of the relative path.
        Sometimes we want to copy only part of a tree, and some intervening directories 
        aren't relevant.
 
-* A sarra component is an example of a complete flow. It:
+
+* There are many different *components* which implement different flows.
+  The "sarra component": 
 
   * consumes messages (posted by the cpost) from its broker queue.
   * copies the files to the right place under the web server.
@@ -1190,3 +1197,5 @@ Review
   * post    - adjust the messages and post the result for consumers from this.
 
   Sarracenia configurations daisy chain together to achieve multi-hop processing.
+
+

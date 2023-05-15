@@ -2,6 +2,12 @@
 
 Given an empty Ubuntu 22.04 (or later) run  the script here:
 
+ sudo apt update
+ sudo apt upgrade
+ git clone https://github.com/MetPX/sr3-examples/
+
+ cd sr3-examples/empty-amqp-pump
+
  ./rabbitmq_pump_setup.sh
 
 to:
@@ -22,17 +28,26 @@ To teach people in depth about Sarracenia, one can run through the accompanying
 tours:
 
 * `Sr3 102: Introduction for Developers and System Administrators <sr3_102_Intro_For_DevsAndAdmins.rst>`_
+* `Sr3 103: Selecting Files for Processing <sr3_103_Selection.rst>`_
 
 Documentation:
 
 * All the options (the verbs in the configuration files) https://metpx.github.io/sarracenia/Reference/sr3_options.7.html
+
+  * to find any standard option, go to the above link and search in the page.
+  * some options are defined by the callbacks that implement them.  You may need to look
+    in the callback routines' pages for information about those, for example:
+
+    * https://metpx.github.io/sarracenia/Reference/flowcb.html#module-sarracenia.flowcb.nodupe
+    * https://metpx.github.io/sarracenia/Reference/flowcb.html#module-sarracenia.flowcb.scheduled
+
+  * Variables you can reference in configuration files: https://metpx.github.io/sarracenia/Reference/sr3_options.7.html#variables
 
 * The command line: https://metpx.github.io/sarracenia/Reference/sr3.1.html
 
 * The missing sr3 101 course: https://metpx.github.io/sarracenia/Tutorials/1_CLI_introduction.html
 
 * Sarracenia/sr3 home page: https://metpx.github.io/sarracenia/
-
 
 
 image credits:
