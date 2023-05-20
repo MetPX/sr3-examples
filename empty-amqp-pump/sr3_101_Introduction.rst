@@ -26,8 +26,11 @@ What Got Dropped
  
 * website moved: https://metpx.github.io/sarracenia
 * have not had demand/use cases for: segmented files.
+  * prioritization, to be re-implemented in time.
 * have not deployed: reports (easy to do, but high volume.)
+  * prioritization: easily re-implemented.
 * cluster level routing: people want specific data sets, not all data from a cluster.
+  * easily re-implemented.
 * Edmonton site was dismantled (Project Alta)
 * RADAR redundancy was implemented and then dismantled (S-Band only upload to Montreal)
     
@@ -49,8 +52,10 @@ What's "new" (vs. 2015)
 * "Sources" groupings of data by originating org (replaced cluster routing.)
 * Python plugin API, addreses initial inflexibilities.
 * extensive python re-factor from 2020-2023 resulting in sr3 (Sarracenia version 3)
-  * there is now only one algorithm for all components.
+  * 20% code size reduction
+  * one algorithm for all components, and more commonality and consistency.
   * MQTT (another queueing protocol besides AMQP.)
+  * different, more pythonic plugin architecture
 * The C implementation exists and is integrated so both can be used together
   * subset (components: post,watch + shovel )
   * typically 10x lighter/faster than python, but no API.

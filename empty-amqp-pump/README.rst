@@ -29,6 +29,7 @@ To this empty data pump can be added a lot of other layers of functionality.
 To teach people in depth about Sarracenia, one can run through the accompanying 
 tours:
 
+* `Sr3 101: Introduction to Sarracenia <sr3_101_Introduction.rst>`_
 * `Sr3 102: Introduction for Developers and System Administrators <sr3_102_Intro_For_DevsAndAdmins.rst>`_
 * `Sr3 103: Selecting Files for Processing <sr3_103_Selection.rst>`_
 
