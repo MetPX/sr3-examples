@@ -22,12 +22,18 @@ Use separate subscribers to implement Priorities
  
 * Priority means getting your own queue.
 
+
 Parallelism
 -----------
 * instances
 
 accellerators,
 
+
+In Clusters
+-----------
+
+* queue
 
 for posting:
 

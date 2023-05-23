@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="15cm" height="22cm" viewBox="17 10 298 440" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs/>
+  <g id="Background">
+    <rect style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 0.4; stroke-linejoin: round; stroke: #000000" x="17.7552" y="393.9" width="211.25" height="56.5" rx="4" ry="4"/>
+    <polygon style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 0.2; stroke: #000000" fill-rule="evenodd" points="310.546,124.669 220.048,124.657 268.048,152.157 "/>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="235.188" y="130.896">
+      <tspan x="235.188" y="130.896">xs_tsource_xpublic</tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="31.9394" y="186.962">
+      <tspan x="31.9394" y="186.962"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="207.546" y="9.88798">
+      <tspan x="207.546" y="9.88798"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="156.796" y="14.263">
+      <tspan x="156.796" y="14.263"></tspan>
+    </text>
+    <polygon style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 0.2; stroke: #000000" fill-rule="evenodd" points="80.0056,408.5 24.5418,408.308 56.967,429.04 "/>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="38.432" y="416.808">
+      <tspan x="38.432" y="416.808">exchange</tspan>
+    </text>
+    <rect style="fill: #e5e5e5; fill-opacity: 1; stroke-opacity: 1; stroke-width: 0.2; stroke-linejoin: round; stroke: #000000" x="90.2652" y="409.15" width="106.237" height="18.5" rx="2" ry="2"/>
+    <ellipse style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 0.2; stroke-linejoin: round; stroke: #000000" cx="121.945" cy="419.066" rx="20.5" ry="4.9159"/>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="107.45" y="422.542">
+      <tspan x="107.45" y="422.542">config</tspan>
+    </text>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="150.29" y="420.354">
+      <tspan x="150.29" y="420.354">Component</tspan>
+    </text>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="120.988" y="402.406">
+      <tspan x="120.988" y="402.406">Legend</tspan>
+    </text>
+    <g>
+      <line style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke-linejoin: round; stroke: #0000ff" x1="88.958" y1="430.908" x2="90.0781" y2="440.173"/>
+      <polygon style="fill: #0000ff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #0000ff" fill-rule="evenodd" points="90.6182,444.64 86.9197,439.044 90.0781,440.173 92.8764,438.323 "/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="97.692" y="443.1">
+      <tspan x="97.692" y="443.1">http data flow</tspan>
+    </text>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="35.5786" y="441.592">
+      <tspan x="35.5786" y="441.592">sftp data flow</tspan>
+    </text>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="159.114" y="440.536">
+      <tspan x="159.114" y="440.536">amqp posting flow</tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="7.8934" y="291.89">
+      <tspan x="7.8934" y="291.89"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="247.394" y="38.7642">
+      <tspan x="247.394" y="38.7642"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="69.3934" y="383.014">
+      <tspan x="69.3934" y="383.014"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="29.8934" y="380.514">
+      <tspan x="29.8934" y="380.514"></tspan>
+    </text>
+    <g>
+      <line style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #00ff00" x1="152.208" y1="432.17" x2="153.328" y2="441.435"/>
+      <polygon style="fill: #00ff00; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #00ff00" fill-rule="evenodd" points="153.868,445.902 150.169,440.305 153.328,441.435 156.126,439.585 "/>
+    </g>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="9.6396" y="372.966">
+      <tspan x="9.6396" y="372.966"></tspan>
+    </text>
+    <g>
+      <line style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x1="30.7556" y1="423" x2="29.952" y2="435.663"/>
+      <polygon style="fill: #000000; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" fill-rule="evenodd" points="29.667,440.154 27.053,433.976 29.952,435.663 33.041,434.356 "/>
+    </g>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="45.0056" y="23.25">
+      <tspan x="45.0056" y="23.25">103 Tests</tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="130.756" y="16.75">
+      <tspan x="130.756" y="16.75"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="52.6392" y="32.3236">
+      <tspan x="52.6392" y="32.3236"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="131.015" y="17.8751">
+      <tspan x="131.015" y="17.8751"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="221.388" y="235.94">
+      <tspan x="221.388" y="235.94"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="43.2554" y="214.282">
+      <tspan x="43.2554" y="214.282"></tspan>
+    </text>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="89.8302" y="226.358">
+      <tspan x="89.8302" y="226.358">$HOME/hungry</tspan>
+    </text>
+    <g>
+      <path style="fill: #a5a585; fill-opacity: 1; stroke: none" fill-rule="evenodd" d="M 121.794 243.228 L 121.78,243.041 L 121.739,242.857 L 121.669,242.673 L 121.572,242.492 L 121.453,242.311 L 121.304,242.132 L 121.128,241.957 L 120.927,241.785 L 120.699,241.615 L 120.448,241.455 L 120.173,241.294 L 119.878,241.136 L 119.554,240.987 L 119.212,240.844 L 118.85,240.707 L 118.465,240.575 L 118.064,240.453 L 117.644,240.336 L 117.209,240.228 L 116.753,240.126 L 116.288,240.029 L 115.806,239.945 L 115.313,239.863 L 114.813,239.796 L 114.299,239.737 L 113.776,239.687 L 113.251,239.644 L 112.716,239.614 L 112.179,239.588 L 111.638,239.571 L 111.098,239.571 L 111.098,239.571 L 110.555,239.571 L 110.014,239.588 L 109.477,239.614 L 108.942,239.644 L 108.416,239.687 L 107.894,239.737 L 107.382,239.796 L 106.88,239.863 L 106.386,239.945 L 105.904,240.029 L 105.44,240.126 L 104.987,240.228 L 104.552,240.336 L 104.131,240.453 L 103.728,240.575 L 103.343,240.707 L 102.983,240.844 L 102.639,240.987 L 102.317,241.136 L 102.019,241.294 L 101.745,241.455 L 101.494,241.615 L 101.266,241.785 L 101.064,241.957 L 100.889,242.132 L 100.74,242.311 L 100.62,242.492 L 100.524,242.673 L 100.454,242.857 L 100.416,243.041 L 100.401,243.228 L 100.401,243.228 L 100.416,243.415 L 100.454,243.596 L 100.524,243.783 L 100.62,243.964 L 100.74,244.145 L 100.889,244.323 L 101.064,244.498 L 101.266,244.671 L 101.494,244.837 L 101.745,245.001 L 102.019,245.161 L 102.317,245.319 L 102.639,245.468 L 102.983,245.611 L 103.343,245.748 L 103.728,245.88 L 104.131,246.003 L 104.552,246.119 L 104.987,246.228 L 105.44,246.33 L 105.904,246.426 L 106.386,246.511 L 106.88,246.59 L 107.382,246.66 L 107.894,246.718 L 108.416,246.768 L 108.942,246.809 L 109.477,246.841 L 110.014,246.864 L 110.555,246.882 L 111.098,246.885 L 111.098,246.885 L 111.638,246.882 L 112.179,246.864 L 112.716,246.841 L 113.251,246.809 L 113.776,246.768 L 114.299,246.718 L 114.813,246.66 L 115.313,246.59 L 115.806,246.511 L 116.288,246.426 L 116.753,246.33 L 117.209,246.228 L 117.644,246.119 L 118.064,246.003 L 118.465,245.88 L 118.85,245.748 L 119.212,245.611 L 119.554,245.468 L 119.878,245.319 L 120.173,245.161 L 120.448,245.001 L 120.699,244.837 L 120.927,244.671 L 121.128,244.498 L 121.304,244.323 L 121.453,244.145 L 121.572,243.964 L 121.669,243.783 L 121.739,243.596 L 121.78,243.415 L 121.794,243.228z"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.02; stroke: #494936" d="M 121.669 243.169 L 121.654,242.982 L 121.616,242.804 L 121.549,242.623 L 121.456,242.445 L 121.33,242.264 L 121.178,242.091 L 121.012,241.916 L 120.807,241.753 L 120.582,241.586 L 120.334,241.423 L 120.059,241.268 L 119.764,241.113 L 119.446,240.967 L 119.11,240.821 L 118.742,240.689 L 118.359,240.561 L 117.959,240.438 L 117.544,240.324 L 117.112,240.219 L 116.662,240.117 L 116.195,240.026 L 115.719,239.942 L 115.228,239.863 L 114.732,239.796 L 114.223,239.737 L 113.7,239.69 L 113.178,239.644 L 112.646,239.617 L 112.114,239.594 L 111.571,239.579 L 111.034,239.571 L 111.034,239.571 L 110.496,239.579 L 109.959,239.594 L 109.421,239.617 L 108.895,239.644 L 108.37,239.69 L 107.85,239.737 L 107.339,239.796 L 106.839,239.863 L 106.351,239.942 L 105.875,240.026 L 105.408,240.117 L 104.958,240.219 L 104.529,240.324 L 104.108,240.438 L 103.705,240.561 L 103.325,240.689 L 102.963,240.821 L 102.627,240.967 L 102.306,241.113 L 102.008,241.268 L 101.739,241.423 L 101.491,241.586 L 101.26,241.753 L 101.061,241.916 L 100.889,242.091 L 100.74,242.264 L 100.617,242.445 L 100.521,242.623 L 100.454,242.804 L 100.416,242.982 L 100.401,243.169 L 100.401,243.169 L 100.416,243.35 L 100.454,243.529 L 100.521,243.713 L 100.617,243.891 L 100.74,244.069 L 100.889,244.244 L 101.061,244.417 L 101.26,244.583 L 101.491,244.747 L 101.739,244.913 L 102.008,245.071 L 102.306,245.22 L 102.627,245.369 L 102.963,245.512 L 103.325,245.646 L 103.705,245.775 L 104.108,245.895 L 104.529,246.011 L 104.958,246.117 L 105.408,246.219 L 105.875,246.312 L 106.351,246.394 L 106.839,246.47 L 107.339,246.537 L 107.85,246.596 L 108.37,246.645 L 108.895,246.689 L 109.421,246.718 L 109.959,246.742 L 110.496,246.756 L 111.034,246.762 L 111.034,246.762 L 111.571,246.756 L 112.114,246.742 L 112.646,246.718 L 113.178,246.689 L 113.7,246.645 L 114.223,246.596 L 114.732,246.537 L 115.228,246.47 L 115.719,246.394 L 116.195,246.312 L 116.662,246.219 L 117.112,246.117 L 117.544,246.011 L 117.959,245.895 L 118.359,245.775 L 118.742,245.646 L 119.11,245.512 L 119.446,245.369 L 119.764,245.22 L 120.059,245.071 L 120.334,244.913 L 120.582,244.747 L 120.807,244.583 L 121.012,244.417 L 121.178,244.244 L 121.33,244.069 L 121.456,243.891 L 121.549,243.713 L 121.616,243.529 L 121.654,243.35 L 121.669,243.169"/>
+      <path style="fill: #a5a585; fill-opacity: 1; stroke: none" fill-rule="evenodd" d="M 100.401 235.589 L 100.401,243.292 L 121.669,243.292 L 121.669,235.589 L 100.401,235.589z"/>
+      <path style="fill: #c9c9b6; fill-opacity: 1; stroke: none" fill-rule="evenodd" d="M 121.794 235.525 L 121.78,235.335 L 121.739,235.151 L 121.669,234.97 L 121.572,234.789 L 121.453,234.605 L 121.304,234.427 L 121.128,234.249 L 120.927,234.082 L 120.699,233.916 L 120.448,233.746 L 120.173,233.591 L 119.878,233.434 L 119.554,233.282 L 119.212,233.142 L 118.85,233.004 L 118.465,232.87 L 118.064,232.747 L 117.644,232.633 L 117.209,232.522 L 116.753,232.42 L 116.288,232.327 L 115.806,232.242 L 115.313,232.163 L 114.813,232.093 L 114.299,232.034 L 113.776,231.985 L 113.251,231.944 L 112.716,231.912 L 112.179,231.886 L 111.638,231.871 L 111.098,231.868 L 111.098,231.868 L 110.555,231.871 L 110.014,231.886 L 109.477,231.912 L 108.942,231.944 L 108.416,231.985 L 107.894,232.034 L 107.382,232.093 L 106.88,232.163 L 106.386,232.242 L 105.904,232.327 L 105.44,232.42 L 104.987,232.522 L 104.552,232.633 L 104.131,232.747 L 103.728,232.87 L 103.343,233.004 L 102.983,233.142 L 102.639,233.282 L 102.317,233.434 L 102.019,233.591 L 101.745,233.746 L 101.494,233.916 L 101.266,234.082 L 101.064,234.249 L 100.889,234.427 L 100.74,234.605 L 100.62,234.789 L 100.524,234.97 L 100.454,235.151 L 100.416,235.335 L 100.401,235.525 L 100.401,235.525 L 100.416,235.709 L 100.454,235.896 L 100.524,236.074 L 100.62,236.261 L 100.74,236.439 L 100.889,236.62 L 101.064,236.796 L 101.266,236.965 L 101.494,237.135 L 101.745,237.298 L 102.019,237.459 L 102.317,237.614 L 102.639,237.763 L 102.983,237.906 L 103.343,238.046 L 103.728,238.174 L 104.131,238.3 L 104.552,238.417 L 104.987,238.525 L 105.44,238.627 L 105.904,238.724 L 106.386,238.805 L 106.88,238.887 L 107.382,238.954 L 107.894,239.013 L 108.416,239.065 L 108.942,239.103 L 109.477,239.138 L 110.014,239.162 L 110.555,239.176 L 111.098,239.182 L 111.098,239.182 L 111.638,239.176 L 112.179,239.162 L 112.716,239.138 L 113.251,239.103 L 113.776,239.065 L 114.299,239.013 L 114.813,238.954 L 115.313,238.887 L 115.806,238.805 L 116.288,238.724 L 116.753,238.627 L 117.209,238.525 L 117.644,238.417 L 118.064,238.3 L 118.465,238.174 L 118.85,238.046 L 119.212,237.906 L 119.554,237.763 L 119.878,237.614 L 120.173,237.459 L 120.448,237.298 L 120.699,237.135 L 120.927,236.965 L 121.128,236.796 L 121.304,236.62 L 121.453,236.439 L 121.572,236.261 L 121.669,236.074 L 121.739,235.896 L 121.78,235.709 L 121.794,235.525z"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.02; stroke: #494936" d="M 121.669 235.467 L 121.654,235.28 L 121.616,235.102 L 121.549,234.923 L 121.456,234.742 L 121.33,234.558 L 121.178,234.386 L 121.012,234.219 L 120.807,234.047 L 120.582,233.883 L 120.334,233.717 L 120.059,233.565 L 119.764,233.41 L 119.446,233.261 L 119.11,233.124 L 118.742,232.987 L 118.359,232.861 L 117.959,232.738 L 117.544,232.622 L 117.112,232.514 L 116.662,232.414 L 116.195,232.324 L 115.719,232.239 L 115.228,232.163 L 114.732,232.093 L 114.223,232.034 L 113.7,231.985 L 113.178,231.944 L 112.646,231.912 L 112.468,231.903 L 109.599,231.903 L 109.421,231.912 L 108.895,231.944 L 108.37,231.985 L 107.85,232.034 L 107.339,232.093 L 106.839,232.163 L 106.351,232.239 L 105.875,232.324 L 105.408,232.414 L 104.958,232.514 L 104.529,232.622 L 104.108,232.738 L 103.705,232.861 L 103.325,232.987 L 102.963,233.124 L 102.627,233.261 L 102.306,233.41 L 102.008,233.565 L 101.739,233.717 L 101.491,233.883 L 101.26,234.047 L 101.061,234.219 L 100.889,234.386 L 100.74,234.558 L 100.617,234.742 L 100.521,234.923 L 100.454,235.102 L 100.416,235.28 L 100.401,235.467 L 100.401,235.467 L 100.416,235.645 L 100.454,235.829 L 100.521,236.01 L 100.617,236.188 L 100.74,236.366 L 100.889,236.542 L 101.061,236.711 L 101.26,236.883 L 101.491,237.047 L 101.739,237.21 L 102.008,237.368 L 102.306,237.517 L 102.627,237.663 L 102.963,237.809 L 103.325,237.944 L 103.705,238.069 L 104.108,238.189 L 104.529,238.306 L 104.958,238.411 L 105.408,238.513 L 105.875,238.61 L 106.351,238.686 L 106.839,238.767 L 107.339,238.832 L 107.85,238.893 L 108.37,238.946 L 108.895,238.986 L 109.421,239.019 L 109.959,239.039 L 110.496,239.051 L 111.034,239.059 L 111.034,239.059 L 111.571,239.051 L 112.114,239.039 L 112.646,239.019 L 113.178,238.986 L 113.7,238.946 L 114.223,238.893 L 114.732,238.832 L 115.228,238.767 L 115.719,238.686 L 116.195,238.61 L 116.662,238.513 L 117.112,238.411 L 117.544,238.306 L 117.959,238.189 L 118.359,238.069 L 118.742,237.944 L 119.11,237.809 L 119.446,237.663 L 119.764,237.517 L 120.059,237.368 L 120.334,237.21 L 120.582,237.047 L 120.807,236.883 L 121.012,236.711 L 121.178,236.542 L 121.33,236.366 L 121.456,236.188 L 121.549,236.01 L 121.616,235.829 L 121.654,235.645 L 121.669,235.467"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.02; stroke: #000000" d="M 100.401 235.467 L 100.401,243.163"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.02; stroke: #000000" d="M 121.669 235.467 L 121.669,243.163"/>
+    </g>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="120.659" y="219.688">
+      <tspan x="120.659" y="219.688"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="174.755" y="110.282">
+      <tspan x="174.755" y="110.282"></tspan>
+    </text>
+    <rect style="fill: #e5e5e5; fill-opacity: 1; stroke-opacity: 1; stroke-width: 0.2; stroke-linejoin: round; stroke: #000000" x="155.378" y="227.014" width="158" height="29" rx="2" ry="2"/>
+    <ellipse style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 0.2; stroke-linejoin: round; stroke: #000000" cx="237.327" cy="238.11" rx="16.0455" ry="7.7618"/>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="277.878" y="243.276">
+      <tspan x="277.878" y="243.276">subscribe</tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="175.616" y="248.502">
+      <tspan x="175.616" y="248.502"></tspan>
+    </text>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="224.942" y="240.304">
+      <tspan x="224.942" y="240.304">hungry</tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="241.048" y="202.096">
+      <tspan x="241.048" y="202.096"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="234.378" y="241.514">
+      <tspan x="234.378" y="241.514"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="202.374" y="255.872">
+      <tspan x="202.374" y="255.872"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="237.79" y="240.522">
+      <tspan x="237.79" y="240.522"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="286.56" y="242.204">
+      <tspan x="286.56" y="242.204"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="284.504" y="242.282">
+      <tspan x="284.504" y="242.282"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="243.254" y="241.282">
+      <tspan x="243.254" y="241.282"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="77.5054" y="156.969">
+      <tspan x="77.5054" y="156.969"></tspan>
+    </text>
+    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="65.0719" y="20.6701">
+      <tspan x="65.0719" y="20.6701"></tspan>
+    </text>
+  </g>
+  <g id="103_b_poll">
+    <rect style="fill: #e5e5e5; fill-opacity: 1; stroke-opacity: 1; stroke-width: 0.2; stroke-linejoin: round; stroke: #000000" x="157.089" y="40.542" width="158" height="29" rx="2" ry="2"/>
+    <ellipse style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 0.2; stroke-linejoin: round; stroke: #000000" cx="239.038" cy="51.6378" rx="16.0455" ry="7.7618"/>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="279.589" y="56.8036">
+      <tspan x="279.589" y="56.8036">poll</tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="177.327" y="62.0284">
+      <tspan x="177.327" y="62.0284"></tspan>
+    </text>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="232.227" y="54.2837">
+      <tspan x="232.227" y="54.2837">web</tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="236.089" y="55.042">
+      <tspan x="236.089" y="55.042"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="204.085" y="69.3996">
+      <tspan x="204.085" y="69.3996"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="239.501" y="54.0496">
+      <tspan x="239.501" y="54.0496"></tspan>
+    </text>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="288.273" y="55.7312">
+      <tspan x="288.273" y="55.7312"></tspan>
+    </text>
+    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="284.531" y="57.1205">
+      <tspan x="284.531" y="57.1205"></tspan>
+    </text>
+    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="281.558" y="55.3367">
+      <tspan x="281.558" y="55.3367"></tspan>
+    </text>
+    <g>
+      <path style="fill: #b7b79d; fill-opacity: 1; stroke: none" fill-rule="evenodd" d="M 51.5947 64.5775 L 51.5947,87.0554 L 64.8804,87.0554 L 64.8804,64.5775 L 51.5947,64.5775z"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.02; stroke: #494936" d="M 51.5947 64.5775 L 51.5947,87.0554 L 64.8804,87.0554 L 64.8804,64.5775 L 51.5947,64.5775"/>
+      <path style="fill: #c9c9b6; fill-opacity: 1; stroke: none" fill-rule="evenodd" d="M 51.5947 64.5775 L 53.395,62.7693 L 66.6767,62.7693 L 64.8804,64.5775 L 51.5947,64.5775z"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.02; stroke: #494936" d="M 51.5947 64.5775 L 53.395,62.7693 L 66.5893,62.7693"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.02; stroke: #494936" d="M 66.5893 62.8607 L 64.8804,64.5775 L 51.5947,64.5775"/>
+      <path style="fill: #c9c9b6; fill-opacity: 1; stroke: none" fill-rule="evenodd" d="M 52.4134 65.885 L 58.482,65.885 L 58.482,68.8338 L 52.4134,68.8338 L 52.4134,65.885z"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.02; stroke: #626248" d="M 52.4134 65.885 L 58.478,65.885 L 58.478,68.8299 L 52.4134,68.8299 L 52.4134,65.885"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.6; stroke: #ecece7" d="M 53.2321 67.3634 L 57.4884,67.3634"/>
+      <path style="fill: #7a7a5a; fill-opacity: 1; stroke: none" fill-rule="evenodd" d="M 64.8804 87.0554 L 66.6767,85.2432 L 66.6767,62.7693 L 64.8804,64.5775 L 64.8804,87.0554z"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.02; stroke: #494936" d="M 64.8804 87.0554 L 66.5893,85.3346"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.02; stroke: #494936" d="M 66.5893 62.8607 L 64.8804,64.5775 L 64.8804,87.0554"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.6; stroke: #ecece7" d="M 51.7616 85.573 L 64.8764,85.573"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.6; stroke: #000000" d="M 51.7616 73.5989 L 64.8764,73.5989"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.6; stroke: #494936" d="M 51.5947 85.4101 L 64.8645,85.4101"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.6; stroke: #000000" d="M 51.5947 73.432 L 64.8645,73.432"/>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 0.02; stroke: #ecece7" d="M 52.4134 68.6749 L 52.4134,65.885 L 58.315,65.885"/>
+    </g>
+    <text font-size="6.77333" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="27.3971" y="47.071">
+      <tspan x="27.3971" y="47.071">https://xx.yy.zz.aa/data</tspan>
+    </text>
+    <g>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #0000ff" d="M 153.854,51.1972 A 48.7548,48.7548 0 1 0 159.443,81.2983"/>
+      <polygon style="fill: #0000ff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #0000ff" fill-rule="evenodd" points="159.937,73.9428 165.541,83.6177 160.397,81.4287 155.559,84.2303 "/>
+    </g>
+    <g>
+      <path style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #0000ff" d="M 63.1493,87.062 A 235.906,235.906 0 0 0 105.356,223.996"/>
+      <polygon style="fill: #0000ff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #0000ff" fill-rule="evenodd" points="109.723,230.086 99.6969,225.14 105.192,224.11 107.665,219.097 "/>
+    </g>
+    <g>
+      <line style="fill: none; stroke-opacity: 1; stroke-width: 1; stroke: #00ff00" x1="241.824" y1="59.3842" x2="264.411" y2="122.199"/>
+      <polygon style="fill: #00ff00; fill-opacity: 1; stroke-opacity: 1; stroke-width: 1; stroke: #00ff00" fill-rule="evenodd" points="264.919,123.611 263.301,122.067 264.411,122.199 265.183,121.39 "/>
+    </g>
+    <g>
+      <line style="fill: none; stroke-opacity: 1; stroke-width: 1; stroke: #00ff00" x1="268.048" y1="152.157" x2="240.972" y2="227.912"/>
+      <polygon style="fill: #00ff00; fill-opacity: 1; stroke-opacity: 1; stroke-width: 1; stroke: #00ff00" fill-rule="evenodd" points="240.468,229.324 240.199,227.104 240.972,227.912 242.082,227.777 "/>
+    </g>
+    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="137.014" y="24.2297">
+      <tspan x="137.014" y="24.2297">Poll &amp; download</tspan>
+    </text>
+  </g>
+</svg>

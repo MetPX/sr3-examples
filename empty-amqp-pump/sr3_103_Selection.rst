@@ -1,4 +1,5 @@
 
+======================================
 Sr3 103 Selecting Files for Processing
 ======================================
 
@@ -33,6 +34,8 @@ Setup
 
 3. Declare the resources for local file post and subscription.
 
+
+.. image:: Diagrams/sr3_103_a_Selection.svg
 
    ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 declare cpost/my_feed subscribe/hungry**
 
@@ -551,6 +554,8 @@ Note that to watch directories:
 
 Polling a Web Site
 ~~~~~~~~~~~~~~~~~~
+
+.. image:: Diagrams/sr3_103_b_poll.svg
 
 Most sites are not Sarracenia enabled, meaning they don't produce messages for each file they
 publish. They will produce a directory or a query API of some kind, and one must issue

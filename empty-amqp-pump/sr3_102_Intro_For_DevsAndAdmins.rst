@@ -266,6 +266,19 @@ Then verify that sr3 sees the configurations:
 	      Data Received: 0 Files/s (0 Bytes/s), Sent: 0 Files/s (0 Bytes/s)
     ubuntu@flow:~/sr3-examples/empty-amqp-pump/config/sr3$
     
+So here is what we are going to do:
+
+.. image:: Diagrams/sr3_102_a_local_file_post_sub.svg
+
+There will be a series of diagrams like this:
+
+* The left-hand-side column represents the data movement, the right-hand side is the message traffic.
+
+* The grey rectangles on the right represent separate sarracenia processes.
+
+* The green rectangle represents the broker, 
+
+
 Have a look at the configurations installed:
 
     ubuntu@flow:~/empty-amqp-pump/config/sr3$ **sr3 edit cpost/my_feed.conf**
@@ -718,6 +731,8 @@ Posting Files for Web Retrieval
     
 So we have a data source producing files locally (cpost/my_feed) and we want to make those
 products available to other servers.
+
+.. image:: Diagrams/sr3_102_b_daisychain.svg
 
 We can use a sarra configuration to copy the files into the web tree, and then repost
 them for web clients.
