@@ -35,7 +35,9 @@ Setup
 3. Declare the resources for local file post and subscription.
 
 
-.. image:: Diagrams/sr3_103_a_Selection.svg
+   an Overview of what we intend to configure:
+
+   .. image:: Diagrams/sr3_103_a_Selection.svg
 
    ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3 declare cpost/my_feed subscribe/hungry**
 
