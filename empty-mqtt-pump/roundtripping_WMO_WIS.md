@@ -55,7 +55,7 @@ vmhost%  sr3 declare subscribe/roundtrip sarra/hpfx_amis_to_local_mqtt
 
 sample run:
 
-``bash
+```bash
 
 ubuntu@flow:~/sr3-examples/empty-mqtt-pump$ mkdir ~/.config/sr3/sarra ~/.config/sr3/subscribe
 ubuntu@flow:~/sr3-examples/empty-mqtt-pump$  cp config/sr3/subscribe/roundtrip.conf ~/.config/sr3/subscribe
