@@ -200,7 +200,7 @@ ubuntu@flow:~$
 
 ```
 
-## Step 3:  Start up mosquitt_sub
+## Step 3:  Start up mosquitto_sub
 
 To have a sr3 independent view of the messages, one can also start up mosquitto_sub.
 Start a separate shell on the vm to see the raw messages:
