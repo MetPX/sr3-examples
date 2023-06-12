@@ -1,7 +1,12 @@
 
-# Subscribe to Sarracenia Data pump, producing a WMO/WIS format message flow
+# WMO datamart & WMO/WIS format Data Interchange.
 
-Given one has installed a local mqtt broker, and sr3 then the following configurations are installed:
+This pair of configurations subscribes to an ECCC datamart, creates WMO/WIS format messages for each
+product, and then uploads them to a local mosquitto (MQTT) broker.  A second configuration subscribes
+to the messages and downloads, confirming the ability to ingest WIS format messages.
+ 
+To start with install the local broker with the procedure in README.md. 
+Then the following configurations need to be installed:
 
 The sarra/hpfx_amis_to_local_mqtt configuration will:
 
@@ -340,4 +345,6 @@ One can also look at the output of the mosquitto_sub shell to see that the notif
 } 
 
 ```
+
+
 
