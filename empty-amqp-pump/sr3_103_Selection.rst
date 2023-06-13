@@ -2,7 +2,11 @@
 Sr3 103 Selecting Files for Processing
 ======================================
 
-status: Outline
+The sr3 102 module introduced the command line interface and the log files,
+allowing a user to either produce or consume an entire stream of products.
+Oftentime, one only wants to process a subset of the stream of products on offer.
+This section covers different methods of selecting products both for production
+or consumption.
 
 Downloading
 -----------
@@ -74,9 +78,9 @@ ubuntu@flow2:~/sr3-examples/empty-amqp-pump$ **sr3_cpost -c my_feed -p ~/sr3-exa
 so because the declare was done above all of these files are now in the queue for the subscribe/hungry
 configuration.  Looking at the management UI, Select the Queue tab, and then the queue itself 
 within the tab, and then, looking down the list "get Message" and perhaps 5 as a quantity,
-should give you a display similar to::
+should give you a display similar to:
 
-.. image: Pictures/sb103_messages_in_queue_screenshot.png
+.. image:: Pictures/sb103_messages_in_queue_screenshot.png
 
 Note that, RabbitMQ does not use or understand the content of a message.
 The messages are opaque binaries to RabbitMQ (or any AMQP broker.) 
