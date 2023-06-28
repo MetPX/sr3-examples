@@ -8,6 +8,8 @@ to the messages and downloads, confirming the ability to ingest WIS format messa
 To start with install the local broker with the procedure in README.md. 
 Then the following configurations need to be installed:
 
+(requires metpx-sr3 >= 3.0.41)
+
 The sarra/hpfx_amis_to_local_mqtt configuration will:
 
 * Subscribe (with AMQP) to a public Sarracenia data pump (hpfx.collab.science.gc.ca.)
@@ -104,113 +106,13 @@ ubuntu@flow:~/sr3-examples/empty-mqtt-pump$
 ```
 
 
-## Step 2: Install Correct dev branch or >= 3.0.41
-
-The current release of sr3 does not work with WMO/WIS messages.
-
-```bash
-
-ubuntu@flow:~$ git clone --branch sr3_issue615 https://github.com/MetPX/Sarracenia sr3
-ubuntu@flow:~$ cd sr3
-ubuntu@flow:~/sr3$ sudo apt remove metpx-sr3
-ubuntu@flow:~/sr3$ pip install -e .
-
-# get sr3 into the PATH...
-ubuntu@flow:~/sr3$ exit
-fractal% multipass shell flow
-
-```
-
-this time, with output:
-
-
-```bash
-
-ubuntu@flow:~$ git clone https://github.com/MetPX/Sarracenia sr3
-Cloning into 'sr3'...
-remote: Enumerating objects: 42406, done.
-remote: Counting objects: 100% (2500/2500), done.
-remote: Compressing objects: 100% (791/791), done.
-remote: Total 42406 (delta 1736), reused 2323 (delta 1629), pack-reused 39906
-Receiving objects: 100% (42406/42406), 23.94 MiB | 28.63 MiB/s, done.
-Resolving deltas: 100% (31616/31616), done.
-ubuntu@flow:~$ cd sr3
-ubuntu@flow:~/sr3$ git checkout v3_issue615
-error: pathspec 'v3_issue615' did not match any file(s) known to git
-ubuntu@flow:~/sr3$ set -o vi
-ubuntu@flow:~/sr3$ git checkout v03_issue615
-Branch 'v03_issue615' set up to track remote branch 'v03_issue615' from 'origin'.
-Switched to a new branch 'v03_issue615'
-ubuntu@flow:~/sr3$ git pull
-Already up to date.
-ubuntu@flow:~/sr3$ sudo apt remove metpx-sr3
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-The following packages were automatically installed and are no longer required:
-  ncftp python3-appdirs python3-humanfriendly python3-humanize python3-jsonpickle python3-nacl python3-paramiko python3-psutil python3-watchdog
-Use 'sudo apt autoremove' to remove them.
-The following packages will be REMOVED:
-  metpx-sr3
-0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.
-After this operation, 1067 kB disk space will be freed.
-Do you want to continue? [Y/n] y
-(Reading database ... 75097 files and directories currently installed.)
-Removing metpx-sr3 (3.00.40~ubuntu22.04.1) ...
-ubuntu@flow:~/sr3$ pip install -e .
-Defaulting to user installation because normal site-packages is not writeable
-Obtaining file:///home/ubuntu/sr3
-  Preparing metadata (setup.py) ... done
-Requirement already satisfied: appdirs in /usr/lib/python3/dist-packages (from metpx-sr3==3.0.41) (1.4.4)
-Requirement already satisfied: humanfriendly in /usr/lib/python3/dist-packages (from metpx-sr3==3.0.41) (10.0)
-Requirement already satisfied: humanize in /usr/lib/python3/dist-packages (from metpx-sr3==3.0.41) (0.0.0)
-Requirement already satisfied: jsonpickle in /usr/lib/python3/dist-packages (from metpx-sr3==3.0.41) (2.0.0+dfsg1)
-Requirement already satisfied: paramiko in /usr/lib/python3/dist-packages (from metpx-sr3==3.0.41) (2.9.3)
-Requirement already satisfied: psutil>=5.3.0 in /usr/lib/python3/dist-packages (from metpx-sr3==3.0.41) (5.9.0)
-Requirement already satisfied: watchdog in /usr/lib/python3/dist-packages (from metpx-sr3==3.0.41) (2.1.6)
-Installing collected packages: metpx-sr3
-  Running setup.py develop for metpx-sr3
-Successfully installed metpx-sr3
-
-ubuntu@flow:~/sr3$ which sr3
-ubuntu@flow:~/sr3$ exit
-logout
-fractal% multipass shell flow
-Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.0-73-generic x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
-  System information as of Sat Jun 10 21:49:27 EDT 2023
-
-  System load:  0.05126953125     Processes:             91
-  Usage of /:   9.0% of 28.89GB   Users logged in:       0
-  Memory usage: 4%                IPv4 address for ens3: 10.110.41.32
-  Swap usage:   0%
-
-
-Expanded Security Maintenance for Applications is not enabled.
-
-0 updates can be applied immediately.
-
-Enable ESM Apps to receive additional future security updates.
-See https://ubuntu.com/esm or run: sudo pro status
-
-
-Last login: Sat Jun 10 21:36:48 2023 from 10.110.41.1
-ubuntu@flow:~$ which sr3
-/home/ubuntu/.local/bin/sr3
-ubuntu@flow:~$
-
-```
 
 ## Step 3:  Start up mosquitto_sub
 
 To have a sr3 independent view of the messages, one can also start up mosquitto_sub.
 Start a separate shell on the vm to see the raw messages:
 
-```base
+```bash
 
 fractal% mosquitto_sub -v --pretty -h localhost -t '#' -F '%j %P'
 
