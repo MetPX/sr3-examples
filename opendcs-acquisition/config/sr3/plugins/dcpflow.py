@@ -293,11 +293,11 @@ class Dcpflow(FlowCB):
         rawObsFile=os.path.join( os.path.dirname(self.MessageBrowser), f"rawObs-{self.o.no}.txt" )
 
         # options omitted from Sundew version (to make more accurate WMO bulletins)
-        cmd= f"/usr/bin/bash {os.getenv('DCSTOOL_HOME')}/bin/getDcpMessages -x -e -bTTAAii -h {lsu.hostname} -p {lsu.port} -u {lsu.username} -P {lsu.password} -f {self.MessageBrowser}".split()
+        cmd= f"{os.getenv('DCSTOOL_HOME')}/bin/getDcpMessages -x -e -bTTAAii -h {lsu.hostname} -p {lsu.port} -u {lsu.username} -P {lsu.password} -f {self.MessageBrowser}".split()
 
         # FIXME... thinking about more elegant test harnesses.
         # set to True to debug previously downloaded data without spamming LRGS server.
-        if True:
+        if False:
             logger.critical( f"using canned data instead of {cmd}" )
         else:
             rof=open(rawObsFile,'w')

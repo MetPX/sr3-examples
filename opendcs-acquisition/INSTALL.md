@@ -88,7 +88,7 @@ can use the existing examples ../empty-amqp-broker or ../empty-mqtt-broker to ma
 available on localhost, or use some pre-existing broker. Once the broker is available,
 the following options in the installed configuration will require adjustment:
 
-* *post_broker* *post_exchange* to match the broker and,
+* *post_broker* and *post_exchange* to match the broker and,
 * *post_baseUrl* to match the file transfer protocol in use.
 
 Placement on local disk is managed with:
@@ -119,5 +119,91 @@ Note that in the Canadian version, the KWAL origin is used (which normally repre
 because this is a backup for the data normally obtained via GTS from Wallopp's island. The names are the same
 to avoid all consumers having to allow for different origins in the primary or backup case. This is a fairly special
 case, and most uses would involve discussion with the local GTS authority to select proper headers for the bulletins.
+
+
+
+## Sample run:
+
+```
+
+fractal% sr3 start flow/pull-USGS_LRGS.conf
+missing state for flow/pull-USGS_LRGS
+starting:.( 3 ) Done
+
+fractal% 
+
+
+```
+
+sample log of an instance:
+
+```
+
+ractal% more flow_pull-USGS_LRGS_01.log
+2023-07-12 12:55:26,242 [INFO] sarracenia.flow loadCallbacks flowCallback plugins to load: ['sarracenia.flowcb.retry.Retry', 'sarracenia.flowcb.ho
+usekeeping.resources.Resources', 'dcpflow', 'log', 'post.message']
+2023-07-12 12:55:26,243 [INFO] sarracenia.config add_option retry_driver declared as type:<class 'str'> value:disk
+2023-07-12 12:55:26,253 [INFO] sarracenia.config add_option MemoryMax declared as type:<class 'int'> value:0
+2023-07-12 12:55:26,253 [INFO] sarracenia.config add_option MemoryBaseLineFile declared as type:<class 'int'> value:100
+2023-07-12 12:55:26,253 [INFO] sarracenia.config add_option MemoryMultiplier declared as type:<class 'float'> value:3
+2023-07-12 12:55:26,254 [INFO] dcpflow __init__ really I mean hi
+2023-07-12 12:55:26,254 [INFO] sarracenia.config add_option dcp_pdts_compressed declared as type:<class 'str'> value:https://dcs1.noaa.gov/PDTS_CO
+MPRESSED.txt
+2023-07-12 12:55:26,254 [INFO] sarracenia.config add_option lrgsUrl declared as type:<class 'list'> value:['lrgs://wsccmc@lrgseddn1.cr.usgs.gov:16
+003', 'lrgs://wsccmc@lrgseddn2.cr.usgs.gov:16003', 'lrgs://wsccmc@lrgseddn3.cr.usgs.gov:16003']
+2023-07-12 12:55:26,254 [INFO] sarracenia.config add_option lrgs_download_redundancy declared as type:<class 'bool'> value:Yes
+2023-07-12 12:55:26,254 [INFO] sarracenia.config add_option ahlpdt declared as type:<class 'list'> value:['SXCN40_KWAL 4541B636 457196AA 4453F6F4 
+4454A4BC 44 ...
+2023-07-12 12:55:26,258 [INFO] dcpflow pdts_setup  start 
+2023-07-12 12:55:26,259 [INFO] dcpflow pdthdr_read  read 5105 entries read in PDT to AHL mapping table.
+2023-07-12 12:55:26,259 [INFO] dcpflow pdt_table_read statedir=/home/peter/.cache/sr3/flow/pull-USGS_LRGS
+2023-07-12 12:55:26,259 [INFO] dcpflow pdt_table_read compressed_pdts=/home/peter/.cache/sr3/flow/pull-USGS_LRGS/pdts_compressed.txt
+2023-07-12 12:55:38,928 [INFO] dcpflow pdt_table_read  43354 entries in Platform Definition Table read.
+2023-07-12 12:55:38,932 [INFO] dcpflow pdts_setup  end.  good: 4214,   missing: 891
+2023-07-12 12:55:38,932 [WARNING] dcpflow pdts_setup /home/peter/.cache/sr3/flow/pull-USGS_LRGS/pdts_missing.txt contains the list of: 891 platfor
+ms not found in DCS information table (aka: pdts_compressed), probably removed/replaced ?!
+Until time reached. Normal termination
+2023-07-12 12:55:45,103 [INFO] dcpflow gather ran ['/usr/bin/bash', '/home/peter/opendcs/bin/getDcpMessages', '-x', '-e', '-bTTAAii', '-h', 'lrgse
+ddn1.cr.usgs.gov', '-p', '16003', '-u', 'user', '-P', 'password', '-f', '/home/peter/.cache/sr3/flow/pull-USGS_LRGS/MessageBrowser-1.sc'] su
+ccessfully
+
+  .
+  .
+  .
+
+2023-07-12 12:55:45,104 [INFO] dcpflow gather writing: /tmp/hoho/20230712/USGS_LRGS/SX/KWAL/16/SXAK50_KWAL_121650_02983
+2023-07-12 12:55:45,107 [CRITICAL] dcpflow generate_message  table entry: {'User_Name': 'NWSARH', 'Prime_Type': 'S', 'Prime_Chan': '216', 'Second_
+Type': 'U', 'Second_Chan': '000', 'First_Transmit': '000030', 'Transmit_Period': '000500', 'Transmit_Windows': '0010', 'Transmit_Rate': '0300', 'D
+ata_Format': 'A', 'Location_Code': 'ZZ', 'Location_Region': 'U', 'Location_Name': '', 'Latitude': '000000', 'Longitude': '0000000', 'Category': 'U
+', 'Manufacturer_Id': 'UNKNOWN', 'Model_Number': 'UNKNOWN', 'Season_id': 'N', 'NMC_Flag': 'Y', 'NMC_Descriptor': 'SXAK50', 'PMaint_Name': 'CUSTER,
+KIM', 'PMaint_Phone': '907 790-6812', 'PMaint_Fax': '', 'Shef_Codes': '                           ', 'Update_Date_Year': '2', 'Update_Date_Date': 
+'012', 'Edit_Number': '324000', 'Complete_Flag': '1', 'Status': '6N', 'ahl': 'SXAK50_KWAL'} 
+2023-07-12 12:55:45,107 [CRITICAL] dcpflow generate_message lat: 0.0, lon: 0.0 
+2023-07-12 12:55:45,107 [CRITICAL] dcpflow generate_message  msg: {'_format': 'v03', '_deleteOnPost': {'new_dir', 'exchange', 'post_format', '_for
+mat', 'new_file', 'new_baseUrl', 'new_subtopic', 'new_relPath', 'local_offset', 'subtopic'}, 'exchange': ['xs_lrgs_bulletins'], 'local_offset': 0,
+ 'pubTime': '20230712T165545.105057955', 'new_dir': '/tmp/hoho/20230712/USGS_LRGS/SX/KWAL/16', 'new_file': 'SXAK50_KWAL_121650_02983', 'post_forma
+t': 'v03', 'new_baseUrl': 'file:/tmp/hoho', 'new_relPath': '20230712/USGS_LRGS/SX/KWAL/16/SXAK50_KWAL_121650_02983', 'new_subtopic': ['20230712', 
+'USGS_LRGS', 'SX', 'KWAL', '16'], 'relPath': '20230712/USGS_LRGS/SX/KWAL/16/SXAK50_KWAL_121650_02983', 'subtopic': ['20230712', 'USGS_LRGS', 'SX',
+ 'KWAL', '16'], 'baseUrl': 'file:/tmp/hoho', 'source': 'USGS_LRGS', 'mode': '664', 'size': 245, 'mtime': '20230712T165545.101619482', 'atime': '20
+230712T165545.101619482', 'identity': {'method': 'sha512', 'value': 'cMRf2vrB+S7sL1UlNfjPnupgqkkYflyxKNx870HuGQA6+YjpI0ismIYF5FAGlyRU7V9yT9W/ntBgE
+XsBIUqHIg=='}, 'contentType': 'text/plain'} 
+2023-07-12 12:55:45,107 [INFO] dcpflow gather writing: /tmp/hoho/20230712/USGS_LRGS/SX/KWAL/16/SXMF40_KWAL_121650_04198
+2023-07-12 12:55:45,109 [CRITICAL] dcpflow generate_message  table entry: {'User_Name': 'IPGPFR', 'Prime_Type': 'S', 'Prime_Chan': '219', 'Second_
+Type': 'U', 'Second_Chan': '000', 'First_Transmit': '000040', 'Transmit_Period': '000500', 'Transmit_Windows': '0010', 'Transmit_Rate': '0300', 'D
+ata_Format': 'A', 'Location_Code': 'MQ', 'Location_Region': 'O', 'Location_Name': 'LE ROBERT', 'Latitude': '000015', 'Longitude': '-0000061', 'Cat
+egory': 'L', 'Manufacturer_Id': 'OTT', 'Model_Number': 'OTT HDR', 'Season_id': 'N', 'NMC_Flag': 'Y', 'NMC_Descriptor': 'SOMR10', 'PMaint_Name': 'D
+EROUSSI,SÉBASTIEN', 'PMaint_Phone': '+590 590 99 11 47', 'PMaint_Fax': '+590 590 99 11 34', 'Shef_Codes': 'HMPLVB                     ', 'Update_D
+ate_Year': '2', 'Update_Date_Date': '021', 'Edit_Number': '350000', 'Complete_Flag': '0', 'Status': '5N', 'ahl': 'SXMF40_KWAL'} 
+
+  .
+  .
+  .
+
+eventually it gets posted:
+
+2023-07-12 13:02:10,599 [INFO] sarracenia.flowcb.log after_post posted {'_format': 'v03', '_deleteOnPost': {'new_dir', 'old_format', '_format', 'local_offset', 'post_format', 'new_relPath', 'new_subtopic', 'new_file', 'new_baseUrl', 'subtopic', 'exchange'}, 'exchange': ['xs_lrgs_bulletins'], 'local_offset': 0, 'pubTime': '20230712T170210.59493351', 'new_dir': '/tmp/hoho/20230712/USGS_LRGS/SR/KWAL/17', 'new_file': 'SRMN20_KWAL_121700_07628', 'post_format': 'v03', 'new_baseUrl': 'file:/tmp/hoho', 'new_relPath': '20230712/USGS_LRGS/SR/KWAL/17/SRMN20_KWAL_121700_07628', 'new_subtopic': ['20230712', 'USGS_LRGS', 'SR', 'KWAL', '17'], 'relPath': '20230712/USGS_LRGS/SR/KWAL/17/SRMN20_KWAL_121700_07628', 'subtopic': ['20230712', 'USGS_LRGS', 'SR', 'KWAL', '17'], 'baseUrl': 'file:/tmp/hoho', 'source': 'USGS_LRGS', 'mode': '664', 'size': 156, 'mtime': '20230712T170210.587805271', 'atime': '20230712T170210.587805271', 'identity': {'method': 'sha512', 'value': 'X2BbnMgBch0XkvST/w0dvbDa/N8TXm8q6ngV+whNT6ulIo+3kUY1mL1yZEyQQ0mMmrfh5wD6uWnrrcksDhHNVw=='}, 'contentType': 'text/plain', 'geometry': {'type': 'Point', 'coordinates': (47.1356, -93.3148)}, 'old_format': 'v03'}
+
+
+```
 
 
