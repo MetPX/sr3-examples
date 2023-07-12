@@ -1,5 +1,5 @@
 
-# Circulating Observations obtained via GOES DCS as Bulletins
+# Circulating RAW GOES DCS Observations obtained via LRGS as Bulletin Files.
 
 Firstly, follow the instructions to download/install OpenDCS https://github.com/opendcs/opendcs/.
 Only the initial installation is needed, the daemons are not needed, nor does anything need
@@ -209,6 +209,18 @@ eventually it gets posted:
 
 ## Maintenance Activities
 
+### Robustness to single LRGS Server failure
+
+The *lrgsUrl* configuration setting determines which remote server to query for observations. The flow will run
+one process instance to query each configured server, so the number of *instances* should be configured to match
+the number of *lrgsUrl* entries in the configuration file.
+
+The *lrgs_download_redundancy* option configures search criteria so that every observation is requests from two servers.
+
+Since all observations are downloaded from two servers, the failure of any single server will not result in any
+data loss.
+
+
 ### Add a station
 
 find the PDT of the station to be added, add it to the appropriate header in ~/.config/sr3/flow/ahlpdt.inc
@@ -233,3 +245,7 @@ sr3 restart flow/pull-LRGS_USGS
 restart the flow, it will download the latest version during startup.
 
 
+## Opportunities
+
+This is a directish port of the work done 15 years ago for MetPX Sundew to the new Sarracenia 
+version 3 technology. It uses the same methods as that old 

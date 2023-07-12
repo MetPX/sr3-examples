@@ -1,6 +1,8 @@
 
 from collections import namedtuple
+import codecs
 import datetime
+from hashlib import md5
 import logging
 import os
 import os.path
@@ -235,7 +237,19 @@ class Dcpflow(FlowCB):
 
     def generate_message( self, BulletinFile, Pdt ):
         bulletin_stat = sarracenia.stat( BulletinFile )
-        msg = sarracenia.Message.fromFileData(BulletinFile, self.o, bulletin_stat)
+
+
+        # replace the random suffix with one based on content
+        # so that winnowing will work easily and most obviously.
+        checksum=md5()
+        with open(BulletinFile,'r') as bf:
+            checksum.update(bf.read().encode('latin1'))
+
+        bf2 = str(BulletinFile)[0:-5] + codecs.encode( checksum.digest(), 'hex' ).decode('ascii')
+        logger.critical( f"renaming {BulletinFile} to {bf2} " )
+
+        os.rename(BulletinFile, bf2)
+        msg = sarracenia.Message.fromFileData(bf2, self.o, bulletin_stat)
 
         if Pdt in self.pdt_table:
             logger.critical( f" table entry: {self.pdt_table[Pdt]} " )
@@ -297,7 +311,7 @@ class Dcpflow(FlowCB):
 
         # FIXME... thinking about more elegant test harnesses.
         # set to True to debug previously downloaded data without spamming LRGS server.
-        if False:
+        if True:
             logger.critical( f"using canned data instead of {cmd}" )
         else:
             rof=open(rawObsFile,'w')
