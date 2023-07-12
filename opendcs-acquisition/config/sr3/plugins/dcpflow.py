@@ -311,7 +311,7 @@ class Dcpflow(FlowCB):
 
         # FIXME... thinking about more elegant test harnesses.
         # set to True to debug previously downloaded data without spamming LRGS server.
-        if True:
+        if False:
             logger.critical( f"using canned data instead of {cmd}" )
         else:
             rof=open(rawObsFile,'w')
