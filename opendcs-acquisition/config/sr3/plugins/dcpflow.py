@@ -373,11 +373,3 @@ class Dcpflow(FlowCB):
         rof.close()
 
         return messages
-
-#logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-
-#logger.info('hello')
-#options = sarracenia.config.Config()
-#hoho=Dcpflow(options)
-#logger.info('goodbye')
-
