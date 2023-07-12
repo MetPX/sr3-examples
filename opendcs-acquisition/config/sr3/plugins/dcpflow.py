@@ -246,13 +246,13 @@ class Dcpflow(FlowCB):
             checksum.update(bf.read().encode('latin1'))
 
         bf2 = str(BulletinFile)[0:-5] + codecs.encode( checksum.digest(), 'hex' ).decode('ascii')
-        logger.critical( f"renaming {BulletinFile} to {bf2} " )
+        logger.debug( f"renaming {BulletinFile} to {bf2} to get a reproducible suffix." )
 
         os.rename(BulletinFile, bf2)
         msg = sarracenia.Message.fromFileData(bf2, self.o, bulletin_stat)
 
         if Pdt in self.pdt_table:
-            logger.critical( f" table entry: {self.pdt_table[Pdt]} " )
+            logger.debug( f" table entry: {self.pdt_table[Pdt]} " )
             
             try:
                 lat=float(self.pdt_table[Pdt]['Latitude'])/10000
@@ -260,7 +260,7 @@ class Dcpflow(FlowCB):
                 logger.critical( f"lat: {lat}, lon: {lon} " )
                 if (lat != 0) or (lon != 0):
                     msg['geometry'] = { 'type': 'Point', 'coordinates': ( lat, lon ) }
-                logger.critical( f" msg: {msg} " )
+                logger.debug( f" msg: {msg} " )
             except Exception as ex:
                pass
         return msg
