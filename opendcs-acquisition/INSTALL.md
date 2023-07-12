@@ -207,3 +207,29 @@ eventually it gets posted:
 ```
 
 
+## Maintenance Activities
+
+### Add a station
+
+find the PDT of the station to be added, add it to the appropriate header in ~/.config/sr3/flow/ahlpdt.inc
+restarting the flow will have the change take effect
+
+### Remove a station
+
+edit ~/.config/sr3/flow/ahlpdt.inc to remove the entry.
+restart the flow to have it take effect.
+
+### Get new station definitions from OpenDCS.
+
+Remove the local cached copy, and it will be download automatically at the next restart:
+
+```
+
+rm ~/.cache/sr3/flow/pull-LRGS_USGS/pdt_compressed.txt
+sr3 restart flow/pull-LRGS_USGS
+
+```
+
+restart the flow, it will download the latest version during startup.
+
+
