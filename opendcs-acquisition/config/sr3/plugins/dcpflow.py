@@ -241,6 +241,7 @@ class Dcpflow(FlowCB):
 
         # replace the random suffix with one based on content
         # so that winnowing will work easily and most obviously.
+        
         checksum=md5()
         with open(BulletinFile,'r') as bf:
             checksum.update(bf.read().encode('latin1'))
@@ -248,22 +249,27 @@ class Dcpflow(FlowCB):
         bf2 = str(BulletinFile)[0:-5] + codecs.encode( checksum.digest(), 'hex' ).decode('ascii')
         logger.debug( f"renaming {BulletinFile} to {bf2} to get a reproducible suffix." )
 
-        os.rename(BulletinFile, bf2)
-        msg = sarracenia.Message.fromFileData(bf2, self.o, bulletin_stat)
+        if not os.path.exists(bf2):
+            os.rename(BulletinFile, bf2)
+            msg = sarracenia.Message.fromFileData(bf2, self.o, bulletin_stat)
 
-        if Pdt in self.pdt_table:
-            logger.debug( f" table entry: {self.pdt_table[Pdt]} " )
+            if Pdt in self.pdt_table:
+                logger.debug( f" table entry: {self.pdt_table[Pdt]} " )
             
-            try:
-                lat=float(self.pdt_table[Pdt]['Latitude'])/10000
-                lon=float(self.pdt_table[Pdt]['Longitude'])/10000
-                logger.critical( f"lat: {lat}, lon: {lon} " )
-                if (lat != 0) or (lon != 0):
-                    msg['geometry'] = { 'type': 'Point', 'coordinates': ( lat, lon ) }
-                logger.debug( f" msg: {msg} " )
-            except Exception as ex:
-               pass
-        return msg
+                try:
+                    lat=float(self.pdt_table[Pdt]['Latitude'])/10000
+                    lon=float(self.pdt_table[Pdt]['Longitude'])/10000
+                    logger.debug( f"lat: {lat}, lon: {lon} " )
+                    if (lat != 0) or (lon != 0):
+                        msg['geometry'] = { 'type': 'Point', 'coordinates': ( lat, lon ) }
+                    logger.debug( f" msg: {msg} " )
+                except Exception as ex:
+                   pass
+            return msg
+        else:
+            logger.info( f"{bf2} already received, no need to publish again. discarding {BulletinFile}" )
+            os.unlink(BulletinFile)
+            return None
 
     def gather(self):
         """
@@ -287,7 +293,7 @@ class Dcpflow(FlowCB):
 
         mbf = open( self.MessageBrowser, 'w')
         mbf.write( f"DRS_SINCE: now - {last_minute} minutes\n" )
-        mbf.write( "DRS_UNTIL: now\n" )
+        mbf.write( f"DRS_UNTIL: now\n" )
 
         counter=1
         #for p in self.pdt_table:
@@ -315,15 +321,15 @@ class Dcpflow(FlowCB):
             logger.critical( f"using canned data instead of {cmd}" )
         else:
             rof=open(rawObsFile,'w')
+            logger.info( f"launching {str(cmd).replace(lsu.password,'password')}" )
             p=subprocess.Popen(cmd,stdout=rof)
             p.wait()
             rof.close()
             if p.returncode == 0:
                 with open( self.LastGoodQuery, 'w' ) as f:
                     f.write( f"{os.getpid()}\n" )
-                logger.info( f"ran {cmd} successfully")
             else:
-                logger.error( f"{cmd}: failed")
+                logger.error( f"{str(cmd).replace(lsu.password,'password')}: failed")
                 return []
 
         rof=open(rawObsFile,'r')
@@ -336,7 +342,9 @@ class Dcpflow(FlowCB):
                 FirstLine=True
                 if bf:
                      bf.close()
-                     messages.append(self.generate_message(BulletinFile,Pdt))
+                     msg=self.generate_message(BulletinFile,Pdt)
+                     if msg:
+                         messages.append(msg)
                 continue
             elif FirstLine:
                 FirstLine = False
@@ -360,7 +368,7 @@ class Dcpflow(FlowCB):
 
                     BulletinFile=os.path.join( subdir, f"{Ahl}_{dd}{hh}{mm}_{rnd}" )
                     bf=open(BulletinFile,'w')
-                    logger.info( f"writing: {BulletinFile}" )
+                    #logger.info( f"writing: {BulletinFile}" )
                     bf.write( f"{Ahl.replace('_',' ')} {dd}{hh}{mm}\r\r\n" )
                 except Exception as ex:
                     logger.error( "problem reading ob", exc_info=True )
@@ -369,7 +377,9 @@ class Dcpflow(FlowCB):
 
         if bf:
             bf.close()
-            messages.append(self.generate_message(BulletinFile,Pdt))
+            msg=self.generate_message(BulletinFile,Pdt)
+            if msg:
+                messages.append(msg)
         rof.close()
 
         return messages

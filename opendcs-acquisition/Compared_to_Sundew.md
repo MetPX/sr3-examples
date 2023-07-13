@@ -6,6 +6,7 @@ Please do not interpret anything here as a critique of what was done for the Sun
 That work was done incrementally many several years with no clear understanding of the systems at the outset.
 The Sarracenia work is instead undertaken with full knowledge of what was done before, and with a very
 clear idea of what is needed, so it is naturally affords many opportunities for improvement.
+This work could only happen because of what came before.
 
 
 comparison of work in terms of complexity, Sundew:
