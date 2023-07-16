@@ -1,6 +1,7 @@
 
 
-Given an empty Ubuntu 22.04 (or later) run  the script here:
+Given an shell session on an empty Ubuntu 22.04 (or later) server, ensure it is uptodate, and then
+run the script that installs what is needed:
 
 ```
  sudo apt update
