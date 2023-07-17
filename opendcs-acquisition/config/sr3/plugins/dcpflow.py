@@ -332,12 +332,13 @@ class Dcpflow(FlowCB):
                 logger.error( f"{str(cmd).replace(lsu.password,'password')}: failed")
                 return []
 
-        rof=open(rawObsFile,'r')
+        rof=open(rawObsFile,'rb')
         FirstLine=False
         bf=None
         messages=[]
         RxTime=datetime.datetime.now(datetime.timezone.utc)
-        for raw_line in rof.readlines():
+        for byte_line in rof.readlines():
+            raw_line = byte_line.decode('unicode-escape')
             if raw_line.startswith("TTAAii"):
                 FirstLine=True
                 if bf:
@@ -373,7 +374,10 @@ class Dcpflow(FlowCB):
                 except Exception as ex:
                     logger.error( "problem reading ob", exc_info=True )
                     continue
-            bf.write(raw_line)
+            for l in raw_line.split('\\n'):
+                #l=l.replace('\\r','').replace('\\\\','\\').strip()+'\r\n'
+                l=l.replace('\\r','').strip()+'\r\n'
+                bf.write(l)
 
         if bf:
             bf.close()
