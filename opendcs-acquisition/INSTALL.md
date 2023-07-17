@@ -206,6 +206,14 @@ eventually it gets posted:
 
 ```
 
+## Data Encoding
+
+* based on python string method: .decode('unicode-escape') expands all the \077 octal characters to ASCII equivalents.
+* replace \r and \n with line-feed and carriage-return respectively.
+* trip trailing spaces on each line.
+* ignore \f (formfeed) and \t (tab) and any other escape codes.
+* not sure what happens with \\ I think nothing.
+
 
 ## Maintenance Activities
 

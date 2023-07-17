@@ -360,6 +360,7 @@ class Dcpflow(FlowCB):
                     hh=raw_line[13:15]
                     mm=raw_line[15:17]
                     rnd="%05d" % random.randint(1,10000)
+                    is_plaintext= (raw_line[37] == ' ')
 
                     subdir=os.path.join( self.o.variableExpansion(self.o.directory), \
                             f"{RxTime.year}{RxTime.month:02d}{RxTime.day:02d}", f"{self.o.source}", \
@@ -368,16 +369,19 @@ class Dcpflow(FlowCB):
                         os.makedirs( subdir ) 
 
                     BulletinFile=os.path.join( subdir, f"{Ahl}_{dd}{hh}{mm}_{rnd}" )
-                    bf=open(BulletinFile,'w')
+                    bf=open(BulletinFile,'wb')
                     #logger.info( f"writing: {BulletinFile}" )
-                    bf.write( f"{Ahl.replace('_',' ')} {dd}{hh}{mm}\r\r\n" )
+                    bf.write( f"{Ahl.replace('_',' ')} {dd}{hh}{mm}\r\r\n".encode('latin1') )
                 except Exception as ex:
                     logger.error( "problem reading ob", exc_info=True )
                     continue
-            for l in raw_line.split('\\n'):
-                #l=l.replace('\\r','').replace('\\\\','\\').strip()+'\r\n'
-                l=l.replace('\\r','').strip()+'\r\n'
-                bf.write(l)
+
+            if is_plaintext:
+                for l in raw_line.split('\\n'):
+                    l=l.replace('\\r','\r').strip()+'\n'
+                    bf.write(l.encode('latin1'))
+            else:
+                    bf.write(byte_line)
 
         if bf:
             bf.close()
