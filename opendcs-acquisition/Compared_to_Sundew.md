@@ -66,11 +66,12 @@ So, about 10x less stuff to manage.
 * Sarracenia provides much more built-in functionality, the only code here is to interface with OpenDCS
 * The Sundew plugin had to implement AMQP, building messages manually, and various availability strategies with stuff being left around from previous attempts.
 * In the Sarracenia plugin, availability is implemented with two lines of code in producing the query selection criteria instead of an array of scripts.
-* Sundew's pxRouting table, which is also needed, was left out from the comparison (it's 104klines... would have dwarfed everything else.)
+* Sundew's pxRouting table, which is also needed, was left out from the comparison (it's 104klines... would have dwarfed everything else, would have been 100:1 in that case.)
 * the maintenance interventions in Sarracenia are straightforward, edit one file, and restart. in Sundew, one has to re-run a sort
-  of compiler to rebuild configurations as an intermediate step.
-* in the Sundew version one must have one configuration per LRGS server, the Sarracenia plugin uses a single configuration to query all three with redundancy included.
+  of compiler to rebuild configurations as an intermediate step. The configuration files to manage are also larger.
+* In the Sundew version, one has a configuration per LRGS server, the Sarracenia plugin uses a single configuration to query all three with redundancy included.
 * The Sarracenia version sanity checks PDTs, noting the ones missing from the OpenDCS reference, for later resolution.
-
+* the Sarracenia plugin includes "geometry" (GeoJSON compatible location data) and "datetime" (observation datetime) headers in the messages,
+  not present in Sundew ones.
 
 

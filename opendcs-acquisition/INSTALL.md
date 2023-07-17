@@ -232,6 +232,11 @@ input data for dcpflow callback is the initial output from getDcpMessage -e -x (
 feedback from processing would be needed to understand whether this decode is easily 
 understood by downstream consumers.
 
+* in the message that accompanies the file, the following fields are set:
+  * datetime ( e.g. 'datetime': '2023-07-16T16:16:00Z' ) the observation time from the DCS message header.
+  * geometry ( e.g. 'geometry': {'type': 'Point', 'coordinates': (47.1714, -101.2025)}  the location of the
+    ob as per the Pdt database.
+
 ## Maintenance Activities
 
 ### Robustness to single LRGS Server failure

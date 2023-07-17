@@ -235,7 +235,7 @@ class Dcpflow(FlowCB):
 
         self.pdts_setup()
 
-    def generate_message( self, BulletinFile, Pdt ):
+    def generate_message( self, BulletinFile, Pdt , ob_time):
         bulletin_stat = sarracenia.stat( BulletinFile )
 
 
@@ -265,6 +265,8 @@ class Dcpflow(FlowCB):
                     logger.debug( f" msg: {msg} " )
                 except Exception as ex:
                    pass
+                if ob_time:
+                    msg['datetime'] = ob_time.strftime("%Y-%m-%dT%H:%M:%SZ")
             return msg
         else:
             logger.info( f"{bf2} already received, no need to publish again. discarding {BulletinFile}" )
@@ -343,7 +345,7 @@ class Dcpflow(FlowCB):
                 FirstLine=True
                 if bf:
                      bf.close()
-                     msg=self.generate_message(BulletinFile,Pdt)
+                     msg=self.generate_message(BulletinFile,Pdt,ob_time)
                      if msg:
                          messages.append(msg)
                 continue
@@ -385,7 +387,7 @@ class Dcpflow(FlowCB):
 
         if bf:
             bf.close()
-            msg=self.generate_message(BulletinFile,Pdt)
+            msg=self.generate_message(BulletinFile,Pdt,ob_time)
             if msg:
                 messages.append(msg)
         rof.close()
