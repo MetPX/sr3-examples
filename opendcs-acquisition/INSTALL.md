@@ -208,12 +208,29 @@ eventually it gets posted:
 
 ## Data Encoding
 
-* based on python string method: .decode('unicode-escape') expands all the \077 octal characters to ASCII equivalents.
-* replace \r and \n with line-feed and carriage-return respectively.
-* trip trailing spaces on each line.
-* ignore \f (formfeed) and \t (tab) and any other escape codes.
-* not sure what happens with \\ I think nothing.
+input data for dcpflow callback is the initial output from getDcpMessage -e -x (escape and unix new-lines settings.)
 
+* each observation is prepended with a header determined from ahlpdt directives.
+
+  * the first 8 characters give the Pdt which is looked up in ahldt to get TTAAii_CCCC
+  * the date part of the AHL comes from characters 9-18.
+
+* bulletins have \r\n line endings in general (WMO bulletin style, as oppposed to \n used on MSC bulletins.)
+
+* if the 38'th character on the line is a space, then assume plain-text:
+
+    * based on python string method: .decode('unicode-escape') expands all the \077 octal characters to ASCII equivalents.
+    * replace \r and \n with line-feed and carriage-return respectively.
+    * trim trailing spaces on each line.
+    * ignore \f (formfeed) and \t (tab) and any other escape codes.
+    * not sure what happens with \\ I think nothing.
+
+  else:
+
+    * no change to getDcpMessage output. (treated as binary.)
+
+feedback from processing would be needed to understand whether this decode is easily 
+understood by downstream consumers.
 
 ## Maintenance Activities
 
