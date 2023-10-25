@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  subscribe-dd_all:
+    image: container-scaling-subscribe-dd_all 
+    deploy:
+      mode: replicated
+      replicas: 0
+    environment:
+      - SR3_INSTANCE={{.Task.Slot}}
+      - SR3_CONFIG=subscribe/dd_all.conf
+    volumes:
+      - ./config/sr3/:/root/.config/sr3
+      - ./metrics/subscribe/dd_all:/root/.cache/sr3/subscribe/dd_all/metrics
+      - ./data/sr3/subscribe/dd_all:/tmp/dd_all
+    
+  redis:
+    image: redis
+    deploy:
+      mode: replicated
+      replicas: 1
+    command: redis-server --requirepass SuperSecure
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data/redis:/data
