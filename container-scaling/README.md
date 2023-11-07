@@ -26,7 +26,7 @@ Assuming you have git and Docker installed on any flavour of Linux, or WSL, thes
     `git clone https://github.com/MetPX/sr3-examples.git`  
     `cd sr3-examples/container-scaling`
 2. Create some directories needed for proper operation  
-    `mkdir -p metrics/subscribe/dd_all data/redis`
+    `mkdir -p metrics/ data/redis data/sr3/subscribe/dd_all`
 3. Inialize Docker Swarm
     `docker swarm init`
 4. Build Docker images  
@@ -42,7 +42,7 @@ Assuming you have git and Docker installed on any flavour of Linux, or WSL, thes
     `docker service scale sr3-example_subscribe-dd_all=1`
 9. Verify that the instance started up  
     - `docker service ps sr3-example_subscribe-dd_all`  
-        Checking for at least one task to be in the *Running* state  
+        Checking that our task is in the *Running* state  
     - `docker service logs sr3-example_subscribe-dd_all 2>&1 |grep instance`  
         Should see a line something like *sarracenia.flow run pid: 10 subscribe/subscribe/dd_all instance: 1*.
     - `ls data/sr3/subscribe/dd_all`  
@@ -50,8 +50,8 @@ Assuming you have git and Docker installed on any flavour of Linux, or WSL, thes
 10. Scale up the number of SR3 instances  
     `docker service scale sr3-example_subscribe-dd_all=5`  
 11. Verify that the instances are all started up by running  
-    - `docker service logs sr3-example_subscribe-dd_all`  
-        Checking for at least one task to be in the *Running* state
+    - `docker service ps sr3-example_subscribe-dd_all`  
+        Checking that our 5 tasks are in the *Running* state 
     - `docker service logs sr3-example_subscribe-dd_all 2>&1 |grep instance`    
         Should see 5 lines something like *sarracenia.flow run pid: 10 subscribe/subscribe/dd_all instance: XX*, where XX is a number between 1-5.
     - `ls data/sr3/subscribe/dd_all`  

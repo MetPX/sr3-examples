@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   subscribe-dd_all:
-    image: container-scaling-subscribe-dd_all 
+    image: sr3-example-container-scaling 
     deploy:
       mode: replicated
       replicas: 0
@@ -11,7 +11,7 @@ services:
       - SR3_CONFIG=subscribe/dd_all.conf
     volumes:
       - ./config/sr3/:/root/.config/sr3
-      - ./metrics/subscribe/dd_all:/root/.cache/sr3/subscribe/dd_all/metrics
+      - ./metrics:/root/.cache/sr3/metrics/
       - ./data/sr3/subscribe/dd_all:/tmp/dd_all
     
   redis:
