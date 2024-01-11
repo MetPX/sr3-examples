@@ -207,11 +207,14 @@ class Dcpflow(FlowCB):
         
         options.add_option( 'lrgs_download_redundancy', 'flag', False ) 
         options.add_option( 'ahlpdt', 'list', [] )
+
         self.o = options
 
         if hasattr(self.o,'nodupe_fileAgeMax'):
             self.max_age_in_minutes = int(self.o.nodupe_fileAgeMax/60)
 
+
+        logger.info( f" lrgs_download_redundancy is {self.o.lrgs_download_redundancy} " )
 
     def on_start(self):
 
