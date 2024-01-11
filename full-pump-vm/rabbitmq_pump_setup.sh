@@ -1,0 +1,1 @@
+../empty-amqp-pump/rabbitmq_pump_setup.sh
