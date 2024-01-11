@@ -18,6 +18,9 @@ run the script here:
  ./add_apache_httpd.sh
  ./add_sr3_configs.sh
 
+crontab -e 
+17 * * * * `pwd`/web_cleanup.sh
+
 # start all the flows.
 sr3 start
 
