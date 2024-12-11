@@ -395,10 +395,43 @@ It should be running now.
 
 ## Want more Speed?
 
+Often, a single tcp stream cannot make effective use of the bandwidth available between
+two points, especially when latency is large. The simplest and often most effective 
+means of increasing bandwidth utilisation, given a sufficient volume of files to 
+transfer, is to have more instances participating in the transfer:
+
+```
+
+instances 10
+
+
+```
+
+So now, after *sr3 restart sender/to_hpfx*, it will run 10 processes transferring
+files. One can increase instance upto around 40 or so in a single configuration.
+After that point, it is generally better to split into multiple configurations.
+
 The small file transfers are probably as fast as they are going to get, so the large files are
 more likely the issue. Metpx-sr3 has binary accelleration invocation built in and
 tunable. The accelScpCommand can be used to change the binary (or flags to the 
 binary, e.g. for buffer sizes.) 
+
+```
+
+accelScp /usr/bin/scp -B -s -l 1024 %s %d
+
+```
+
+these switches are:
+
+* -B ... no interactive prompts ( -B )
+* -s use SFTP protocol (instead of earlier scp one.)
+* -l limit bandwidth to the given number of KB/sec.
+
+
+One can use options such as *ConnectMaster* to have longer lasting binary connections.
+One can replace /usr/bin/scp by some other program, or give it the -S flag to replace
+just the encrypted transport.
 
 
 
