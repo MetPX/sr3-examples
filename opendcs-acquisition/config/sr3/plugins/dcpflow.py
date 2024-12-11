@@ -276,9 +276,11 @@ class Dcpflow(FlowCB):
             os.unlink(BulletinFile)
             return None
 
-    def gather(self):
+    def gather(self,messageCountMax):
         """
            return new messages.
+
+           note: messageCountMax ignored...
         """
 
         # define selection criteria for getDcpMessages.
@@ -335,7 +337,7 @@ class Dcpflow(FlowCB):
                     f.write( f"{os.getpid()}\n" )
             else:
                 logger.error( f"{str(cmd).replace(lsu.password,'password')}: failed")
-                return []
+                return (True, [] )
 
         rof=open(rawObsFile,'rb')
         FirstLine=False
@@ -395,4 +397,4 @@ class Dcpflow(FlowCB):
                 messages.append(msg)
         rof.close()
 
-        return messages
+        return (True, messages )
