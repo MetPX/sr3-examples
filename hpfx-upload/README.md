@@ -273,11 +273,13 @@ bob@loli:~/.ssh$
 ## Setup an AMQP publisher for bob@loli
 
 
+```
 mkdir -p ~/to_hpfx  # local uplink directory for files destined for hpfx.
 mkdir -p ~/.config/sr3/watch
 
 ssh hpfx.collab.science.gc.ca -c 'mkdir -p ~/on_hpfx' # directory to store files in.
 
+```
 
 ### write the amqp auth information to a local credential store:
 
@@ -286,7 +288,9 @@ ssh hpfx.collab.science.gc.ca -c 'mkdir -p ~/on_hpfx' # directory to store files
 
 ### create a directory watcher.
 
-cat >~/.config/sr3/watch/to_hpfx.conf <<EOT
+```shell 
+
+bob@loli:-$ cat >~/.config/sr3/watch/to_hpfx.conf <<EOT
 
    post_broker amqps://pas037@hpfx.collab.science.gc.ca
    post_exchange xs_pas037_loli_bob_to_hpfx
@@ -301,6 +305,16 @@ cat >~/.config/sr3/watch/to_hpfx.conf <<EOT
    accept .*
 
 EOT
+
+bob@loli:-$  sr3 declare
+
+```
+
+*sr3 declare* should connect to the broker and declare the exchange the watch
+will be posting to. If the declare does not succeed, stop here
+and debug until it does.
+
+
 
 ### Create a Sender
 
@@ -342,8 +356,12 @@ cat >~/.config/sr3/sender/to_hpfx.conf <<EOT
    accept .*
 
    post_broker hpfx://pas037@hpfx.collab.science.gc.ca
-   post_baseUrl sftp://pas037@hpfx.collab.science.gc.ca
-   post_baseDir /home/pas037
+
+   post_baseUrl sftp://pas037@hpfx.collab.science.gc.ca/on_hpfx
+
+   # make the posted path relative to this:
+   post_baseDir /home/pas037/on_hpfx
+
    post_exchange xs_pas037_on_hpfx
 
 EOT
