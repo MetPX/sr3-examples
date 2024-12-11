@@ -213,7 +213,7 @@ class Dcpflow(FlowCB):
         if hasattr(self.o,'nodupe_fileAgeMax'):
             self.max_age_in_minutes = int(self.o.nodupe_fileAgeMax/60)
         else:
-            logger.error( f" need to set nodupe_fileAgeMax for oldest data to retrieve, defaulting to 10 minutes" )
+            logger.info( f" need to set nodupe_fileAgeMax for oldest data to retrieve, defaulting to 10 minutes" )
             self.max_age_in_minutes = 10
 
         logger.info( f" lrgs_download_redundancy is {self.o.lrgs_download_redundancy} " )
