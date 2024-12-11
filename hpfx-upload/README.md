@@ -24,6 +24,14 @@ What we are doing:
 * if any daemons crash, they should be restarted automatically.
 * any transfers queued should be picked up where they left off.
 
+* it is reasonably performant, but not exceptional, but it's kind of a turtle/hare story:
+  * individual file transfer not particularly tuned. Make it up in volume.
+  * run always, robust restart/continuation.
+  * for small files amortize connections by sending multiple files with one connection.
+  * for large files, use binary accellerators.
+  * run multiple transfers at once in parallel (to overcome/mitigate tcp failings for single transfers.)
+  * if some special tuning is desired, transfer methods are configurable.
+
 
 
 ## Need:
@@ -173,7 +181,22 @@ if you don't have an HA vip setup, then the following cron job is sufficient:
 ```
 
 the processes do not crash very often, so a large proportion of the time, this
-cron job will do nothing.
+cron job will do nothing. Sample output:
+
+```
+
+
+sanity: 2024-12-11 12:54:02,072 929959 [INFO] sarracenia.flow.watch __init__ watching!
+no missing processes found
+no stray processes found
+
+sanity: 2024-12-11 13:09:01,242 930804 [INFO] sarracenia.flow.watch __init__ watching!
+no missing processes found
+no stray processes found
+
+bob@loli:~/.cache/sr3/log$
+
+```
 
 
 ## Setup SSH for passwordless access.
@@ -296,6 +319,18 @@ cat >~/.config/sr3/sender/to_hpfx.conf <<EOT
    # how many parallel transfer processes.
    instances 5 
 
+   # use scp binary for files bigger than a threshold.
+   # for smaller files, it batches a whole batch of transfers over a single
+   # connection, saving setup/teardown per file, but done in python.
+   # for larger files, a binary will consume less cpu, and likely be faster
+   # if the link between both ends can support it.
+   accelThreshold 1M
+
+   # perhaps you have a faster/better large file transfer method available?
+   # wrap it in a script that accepts scp style invocation
+   # accelScpCommand /usr/bin/your_fancy_scp %s %d
+
+
    # while files are being uploaded, have a .tmp suffix:
    inflight .tmp
 
@@ -338,6 +373,16 @@ watch/to_hpfx        idle    1/1     0 100%   0%     0    0.00s    0.00s   n/a  
   is for ensuring sr3 is started when the system boots.
 
 It should be running now.
+
+
+## Want more Speed?
+
+The small file transfers are probably as fast as they are going to get, so the large files are
+more likely the issue. Metpx-sr3 has binary accelleration invocation built in and
+tunable. The accelScpCommand can be used to change the binary (or flags to the 
+binary, e.g. for buffer sizes.) 
+
+
 
 
 ## Try it out
