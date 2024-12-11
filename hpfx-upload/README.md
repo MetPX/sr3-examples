@@ -1,0 +1,358 @@
+
+## Hot Directory to write to a Cluster  
+
+Presume 
+
+* we have someone handy with linux command line.
+* we have a local linux server, with access to large data sets 
+* we have a cluster (called gpsc), or data centre with a lot of storage.
+* ssh access between local and remote.
+* we want to upload data from the local linux server to the remote data centre.
+* the normal linux way to have a long running service is to run processes in
+  the background (called a *daemon* in linux/unix.)
+
+
+What we are doing:
+
+* install metpx-sr3 toolkit, which has code for some daemons.
+* configure and run 1 daemon that watches a directory we pick on the local server.
+* configure and run n daemons that send the files watch found to the cluster.
+* once the n+1 daemons are configured to run:
+  * if you put a file in the local directory, it will get copied to remote.
+
+* the daemons should be restart automatically when the system is restarted.
+* if any daemons crash, they should be restarted automatically.
+* any transfers queued should be picked up where they left off.
+
+
+
+## Need:
+
+* local linux server: call it *loli*
+
+   * an account with access to the files to be copied. 
+   * the sarracenia clients installed:
+     * metpx-sr3 python toolkit.
+   * we'll call the local user: bob
+   * there is a directory here ~bob/to_hpfx
+
+
+* remote cluster server, called *hpfx*
+   * an account on the remote server.  (say pas037)
+   * a directory with enough room to put the data. (say ~pas037/on_hpfx)
+   * an account on the rabbitmq (amqp) broker on the cluster. (say: BOB)
+   * call the server hpfx.collab.science.gc.ca (call it hpfx for short.)
+     hpfx.collab.science.gc.ca has access to the cluster's storage.
+
+* supporting materials.
+
+   * the config files built here are also present in the subdirectories
+     in the same tree as this file. One can copy from the tree,
+     of copy/paste content from this document.
+
+     * *config/* subdirectory would be *~/.config* in a user account.
+     * *config/ssh* would be the *~/.ssh* directory in a user account.
+
+   * Documentation on metpx-sr3:  https://metpx.github.io/sarracenia
+
+ 
+## Sample metpx-sr3 installation method.
+
+This section assumes installing a Python package via pip in a user account.
+Better system integration is provided on ubuntu via debian packages.
+RPM packages are also available for redhat.  This procedure will work
+regardless of distribution, and without administrative access to loli
+or hpfx.
+
+* add ~/.local/bin to PATH.
+
+```shell
+
+vi ~/.bash_profile 
+insert:
+# set PATH so it includes user's private bin if it exists
+for d in  ~/.local/bin ~/bin ; do
+    if [ -d $d ] ; then
+        PATH=${d}:"${PATH}"
+    fi
+done
+
+```
+
+```shell
+pip3 install --user metpx-sr3
+
+```
+
+* logout and log in again to get ~/.local/bin added to PATH
+
+```shell
+
+bob@loli:~$ sr3 features 2>/dev/null
+
+Status:    feature:   python imports:      Description:
+Installed  amqp       amqp                 can connect to rabbitmq brokers
+Absent     azurestorage azure-storage-blob   cannot connect natively to Azure Stoarge accounts
+Installed  appdirs    appdirs              place configuration and state files appropriately for platform (windows/mac/linux)
+Installed  filetypes  magic                able to set content headers
+Absent     ftppoll    dateparser,pytz      not able to poll with ftp
+Installed  humanize   humanize,humanfriendly humans numbers that are easier to read.
+Absent     jsonlogs   pythonjsonlogger     only have raw text logs
+Absent     mqtt       paho.mqtt.client     cannot connect to mqtt brokers (need >= 2.1.0)
+Installed  process    psutil               can monitor, start, stop processes:  Sr3 CLI should basically work
+MISSING    reassembly flufl.lock           need to lock block segmented files to put them back together
+Absent     redis      redis,redis_lock     cannot use redis implementations of retry and nodupe
+Installed  retry      jsonpickle           can write messages to local queues to retry failed publishes/sends/downloads
+Absent     s3         boto3                cannot connect natively to S3-compatible locations (AWS S3, Minio, etc..)
+Installed  sftp       paramiko             can use sftp or ssh based services
+Installed  vip        netifaces            able to use the vip option for high availability clustering
+Installed  watch      watchdog             watch directories
+Installed  xattr      xattr                will store file metadata in extended attributes
+
+ state dir: /home/bob/.cache/sr3
+ config dir: /home/bob/.config/sr3
+
+bob@loli:~$
+
+```
+
+First column features says whether a given feature is enabled in the current installation.
+if some needed feature is *Absent* then one needs to install the python packages listed
+in the third column. (they can be OS packages, or via pip/pip3)
+
+for example:
+
+```shell
+
+  pip3 install --user amqp appdirs humanize humanfriendly netifaces psutil paramiko watchdog xattr 
+
+```
+
+* if systemd is available, get user mode service file
+
+```shell
+
+   mkdir -p ~/.config/systemd/user
+   cd ~/.config/systemd/user
+   wget https://raw.githubusercontent.com/MetPX/sarracenia/refs/heads/stable/tools/metpx-sr3_user.service
+
+   vi metpx-sr3_user.service
+   # replace /usr/bin/sr3 by where it really is: /home/bob/.local/bin/sr3
+   # in vi something like below would do that:
+   :%s+/usr/bin/sr3+/home/bob/.local/bin/sr3+
+
+   # so it starts up with the server in this account.
+   loginctl enable-linger
+   systemctl --user enable metpx-sr3_user
+
+```
+
+* if systemd is unavailable... need something else to start it.
+  (not covered for now.) something to invoke *sr3 start|stop* when needed.
+
+* given that sr3 has been started, there is an auditor process to restart 
+  processes that may have crashed (sr3 sanity)
+
+* if loli is part of an HA cluster with a VIP, then only want sarracenia
+  running on the node with the vip:
+
+```
+
+bob@loli:~$ crontab -l
+9,18,36,45,54 * * * * VIP='192.168.46.173';RESULT=`/sbin/ip addr show | grep $VIP|wc|awk '{print $1}'`; if [ $RESULT -eq 1 ]; then ${HOME}/.local/bin/sr3 sanity ; fi  >> ${HOME}/.cache/sr3/log/cron_sanity.log  2>&1
+bob@loli:~$
+
+```
+
+if you don't have an HA vip setup, then the following cron job is sufficient:
+
+```
+
+9,18,36,45,54 * * * * ${HOME}/.local/bin/sr3 sanity >> ${HOME}/.cache/sr3/log/cron_sanity.log  2>&1
+
+```
+
+the processes do not crash very often, so a large proportion of the time, this
+cron job will do nothing.
+
+
+## Setup SSH for passwordless access.
+
+The tool will be doing transfers in the background using ssh protocols. 
+One must be able to ssh into the remote server from the local one 
+without a prompt (password or otherwise.) It needs to be able to 
+non-interactively log into the remote server. Nothing special, 
+just picking the current key algo recommendations,
+but anything is compliant with security recommendations is fine.
+(this is from 2024/12, recommendations change often.)
+Example:
+
+
+```
+
+bob@loli:~$ ssh-keygen -t ed25519 -f ~/.ssh/loli_bob_ed25519
+Generating public/private ed25519 key pair.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/bob/.ssh/loli_bob_ed25519
+Your public key has been saved in /home/bob/.ssh/loli_bob_ed25519.pub
+The key fingerprint is:
+SHA256:9F73kkDrJJhb0yoq/pwxDWyHW4EGYe7a/k4O3xVA/GA bob@loli
+The key's randomart image is:
++--[ED25519 256]--+
+|    +. ..        |
+|   o . oE        |
+|    . o.+o  .    |
+|   . o o *.o .   |
+|    . = S * * .  |
+|   o . * + O o o |
+|  . o = + + . o .|
+|   ..* * o     . |
+|   .o=X .        |
++----[SHA256]-----+
+bob@loli:~$ 
+bob@loli:~/.ssh$ scp loli_bob_ed25519.pub pas037@hpfx.collab.science.gc.ca:.ssh
+pas037@hpfx.collab.science.gc.ca's password:
+loli_bob_ed25519.pub                              100%  100     2.7KB/s   00:00
+bob@loli:~/.ssh$ssh pas037@hpfx.collab.science.gc.ca
+pas037@hpfx:~/$ cd ~/.ssh
+pas037@hpfx:~/.ssh$ cat loli_bob_ed25519.pub >>authorized_keys
+pas037@hpfx:~/$ chmod 600 authorized_keys
+
+```
+
+* configure bob@loli's ~/.ssh/config to use the right info:
+
+```
+
+Host hpfx
+Hostname hpfx.collab.science.gc.ca
+User pas037
+IdentityFile ~/.ssh/loli_bob_ed25519
+
+```
+
+* install public key on hpfx (in ~/.ssh/authorized_keys (done above with scp.)
+* ssh in once interactively to accept the host key.
+
+
+so now logins without a password should work, e.g.:
+
+```
+
+bob@loli:~/.ssh$ ssh hpfx uname -a
+Linux hpfx3 6.8.0-48-generic #48~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Mon Oct  7 11:24:13 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+bob@loli:~/.ssh$
+
+```
+   
+
+## Setup an AMQP publisher for bob@loli
+
+
+mkdir -p ~/to_hpfx  # local uplink directory for files destined for hpfx.
+mkdir -p ~/.config/sr3/watch
+
+ssh hpfx.collab.science.gc.ca -c 'mkdir -p ~/on_hpfx' # directory to store files in.
+
+
+### write the amqp auth information to a local credential store:
+
+    echo amqps://pas037:pas037_password@hpfx.collab.science.gc.ca >>~/.config/sr3/credentials.conf
+
+
+### create a directory watcher.
+
+cat >~/.config/sr3/watch/to_hpfx.conf <<EOT
+
+   post_broker amqps://pas037@hpfx.collab.science.gc.ca
+   post_exchange xs_pas037_loli_bob_to_hpfx
+
+   post_baseUrl file:${HOME}/to_hpfx
+   path ${HOME}/to_hpfx
+
+   nodupe_ttl on
+
+   # exclude working files (that end in .tmp)
+   reject .*.tmp$
+   accept .*
+
+EOT
+
+### Create a Sender
+
+```shell
+
+mkdir -p ~/.config/sr3/sender
+
+cat >~/.config/sr3/sender/to_hpfx.conf <<EOT
+
+   broker amqps://pas037@hpfx.collab.science.gc.ca
+   exchange xs_pas037_loli_bob_to_hpfx
+
+   # sento host should match Host in ~/.ssh/config
+   sendTo sftp://hpfx
+
+   # how many parallel transfer processes.
+   instances 5 
+
+   # while files are being uploaded, have a .tmp suffix:
+   inflight .tmp
+
+   nodupe_ttl on
+
+   # exclude working files (that end in .tmp)
+   reject .*.tmp$
+   directory /home/pas037/on_hpfx
+   accept .*
+
+   post_broker hpfx://pas037@hpfx.collab.science.gc.ca
+   post_baseUrl sftp://pas037@hpfx.collab.science.gc.ca
+   post_baseDir /home/pas037
+   post_exchange xs_pas037_on_hpfx
+
+EOT
+
+```
+
+### Start it up.
+
+
+```
+systemctl --user start metpx-sr3_user
+sr3 status
+bob@SSC-5CD2310S60:~/.config/sr3/sender$ sr3 status
+status:
+Component/Config     Processes   Connection        Lag                              Rates
+                     State   Run Retry  msg data   Que   LagMax   LagAvg  Last  %rej     pubsub   messages     RxData     TxData
+                     -----   --- -----  --- ----   ---   ------   ------  ----  ----     ------   --------     ------     ------
+sender/to_hpfx       idle    5/5     0 100%   0%     0   23.27s   11.17s 3m28s 21.3%     206B/s       0m/s       0B/s       0B/s
+watch/to_hpfx        idle    1/1     0 100%   0%     0    0.00s    0.00s   n/a  0.0%       0B/s       0m/s       0B/s       0B/s
+
+```
+
+* note that to monitor sr3, it is better to use *sr3 status*...
+  it is a known issue that systemd will claim it is down, when it is 
+  fine. to start/stop, use systemctl, but to see status use sr3 cli.
+  although sr3 restart is fine also. The purpose of systemd integration
+  is for ensuring sr3 is started when the system boots.
+
+It should be running now.
+
+
+## Try it out
+
+* copy files in the directory... see how they show up on the other side.
+* copy trees into the directory... see how the multiple instances provide parallellism.
+* reboot the server, see that the daemons recover and continue.
+* kill some instances... see that sanity restarts them.
+* kill the networking... see that when the networking returns... it is patient... recovers and continues.
+  * caveat... if the server is rebooted while the network is down... have to look...
+* add subscriptions gpsc (a second cluster) to pull files from hpfx (copying from 1 network zone to a second one.)
+* if a file is missed... should likely describe how to recover... 
+  * use touch.
+* do we want mtime preserved?
+  * timeCopy, permCopy
+
+
+
