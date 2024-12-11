@@ -292,17 +292,17 @@ ssh hpfx.collab.science.gc.ca -c 'mkdir -p ~/on_hpfx' # directory to store files
 
 bob@loli:-$ cat >~/.config/sr3/watch/to_hpfx.conf <<EOT
 
-   post_broker amqps://pas037@hpfx.collab.science.gc.ca
-   post_exchange xs_pas037_loli_bob_to_hpfx
+post_broker amqps://pas037@hpfx.collab.science.gc.ca
+post_exchange xs_pas037_loli_bob_to_hpfx
 
-   post_baseUrl file:${HOME}/to_hpfx
-   path ${HOME}/to_hpfx
+post_baseUrl file:${HOME}/to_hpfx
+path ${HOME}/to_hpfx
 
-   nodupe_ttl on
+nodupe_ttl on
 
-   # exclude working files (that end in .tmp)
-   reject .*.tmp$
-   accept .*
+# exclude working files (that end in .tmp)
+reject .*.tmp$
+accept .*
 
 EOT
 
@@ -324,45 +324,45 @@ mkdir -p ~/.config/sr3/sender
 
 cat >~/.config/sr3/sender/to_hpfx.conf <<EOT
 
-   broker amqps://pas037@hpfx.collab.science.gc.ca
-   exchange xs_pas037_loli_bob_to_hpfx
+broker amqps://pas037@hpfx.collab.science.gc.ca
+exchange xs_pas037_loli_bob_to_hpfx
 
-   # sento host should match Host in ~/.ssh/config
-   sendTo sftp://hpfx
+# sento host should match Host in ~/.ssh/config
+sendTo sftp://hpfx
 
-   # how many parallel transfer processes.
-   instances 5 
+# how many parallel transfer processes.
+instances 5 
 
-   # use scp binary for files bigger than a threshold.
-   # for smaller files, it batches a whole batch of transfers over a single
-   # connection, saving setup/teardown per file, but done in python.
-   # for larger files, a binary will consume less cpu, and likely be faster
-   # if the link between both ends can support it.
-   accelThreshold 1M
+# use scp binary for files bigger than a threshold.
+# for smaller files, it batches a whole batch of transfers over a single
+# connection, saving setup/teardown per file, but done in python.
+# for larger files, a binary will consume less cpu, and likely be faster
+# if the link between both ends can support it.
+accelThreshold 1M
 
-   # perhaps you have a faster/better large file transfer method available?
-   # wrap it in a script that accepts scp style invocation
-   # accelScpCommand /usr/bin/your_fancy_scp %s %d
+# perhaps you have a faster/better large file transfer method available?
+# wrap it in a script that accepts scp style invocation
+# accelScpCommand /usr/bin/your_fancy_scp %s %d
 
 
-   # while files are being uploaded, have a .tmp suffix:
-   inflight .tmp
+# while files are being uploaded, have a .tmp suffix:
+inflight .tmp
 
-   nodupe_ttl on
+nodupe_ttl on
 
-   # exclude working files (that end in .tmp)
-   reject .*.tmp$
-   directory /home/pas037/on_hpfx
-   accept .*
+# exclude working files (that end in .tmp)
+reject .*.tmp$
+directory /home/pas037/on_hpfx
+accept .*
 
-   post_broker hpfx://pas037@hpfx.collab.science.gc.ca
+post_broker hpfx://pas037@hpfx.collab.science.gc.ca
 
-   post_baseUrl sftp://pas037@hpfx.collab.science.gc.ca/on_hpfx
+post_baseUrl sftp://pas037@hpfx.collab.science.gc.ca/on_hpfx
 
-   # make the posted path relative to this:
-   post_baseDir /home/pas037/on_hpfx
+# make the posted path relative to this:
+post_baseDir /home/pas037/on_hpfx
 
-   post_exchange xs_pas037_on_hpfx
+post_exchange xs_pas037_on_hpfx
 
 EOT
 
