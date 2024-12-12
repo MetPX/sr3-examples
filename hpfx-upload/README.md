@@ -672,5 +672,5 @@ to either the watch or sender configurations (or both.)
 
 
 For more involved testing, can hook up a continuous feed
-see `TESTING.md`_ for that. That involves installing some audit and cleanup jobs
+see [TESTING](TESTING.md) for that. That involves installing some audit and cleanup jobs
 on hpfx.
