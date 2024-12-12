@@ -182,7 +182,15 @@ bob@loli:~$
 
 ```
 
-if you don't have an HA vip setup, then the following cron job is sufficient:
+In the case of vip usage, one likely needs a similar setting in the config files
+```
+
+vip 192.168.46.173
+
+```
+So that if sr3 is started on the passive node, it realizes and goes into passive
+mode. On the other hand, if you don't have an HA vip setup, then 
+the following cron job is sufficient:
 
 ```shell
 
