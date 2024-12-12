@@ -1,7 +1,7 @@
 
-## Hot Directory to write to a Cluster  
+# Hot Directory to Upload Files to a Cluster  
 
-Presume 
+**Presume:**
 
 * we have someone handy with linux command line.
 * we have a local linux server, with access to large data sets 
@@ -12,7 +12,7 @@ Presume
   the background (called a *daemon* in linux/unix.)
 
 
-What we are doing:
+**What we are doing:**
 
 * install metpx-sr3 toolkit, which has code for some daemons.
 * configure and run 1 daemon that watches a directory we pick on the local server.
@@ -52,21 +52,21 @@ What we are doing:
    * call the server hpfx.collab.science.gc.ca (call it hpfx for short.)
      hpfx.collab.science.gc.ca has access to the cluster's storage.
 
-* supporting materials.
+supporting materials provided:
 
-   * the config files built here are also present in the subdirectories
-     in the same tree as this file. One can copy from the tree,
-     of copy/paste content from this document.
+* the config files built here are also present in the subdirectories
+  in the same tree as this file. One can copy from the tree,
+  of copy/paste content from this document.
 
      * *loli_config/* subdirectory would be *~/.config* in a user account on the local linux server.
      * *loli_config/ssh* would be the *~/.ssh* directory in a user account.
      * *hpfx_config/* files file which would be in *~/.config* on hpfx (barely used.) 
      * *hpfx_config/ssh* what needs to be on remote ~/.ssh to acccept client key.
 
-     After copying the files, one perform global substitutions 
-     with: find hpfx_config/ -type f | xargs sed -i 's+pas037+good001+g'  
+  After copying the files, one perform global substitutions 
+  with: find hpfx_config/ -type f | xargs sed -i 's+pas037+good001+g'  
 
-   * Documentation on metpx-sr3:  https://metpx.github.io/sarracenia
+* Documentation on metpx-sr3:  https://metpx.github.io/sarracenia
 
  
 ## Sample metpx-sr3 installation method.
@@ -174,7 +174,7 @@ for example:
 * if loli is part of an HA cluster with a VIP, then only want sarracenia
   running on the node with the vip:
 
-```
+```shell
 
 bob@loli:~$ crontab -l
 9,18,36,45,54 * * * * VIP='192.168.46.173';RESULT=`/sbin/ip addr show | grep $VIP|wc|awk '{print $1}'`; if [ $RESULT -eq 1 ]; then ${HOME}/.local/bin/sr3 sanity ; fi  >> ${HOME}/.cache/sr3/log/cron_sanity.log  2>&1
@@ -184,7 +184,7 @@ bob@loli:~$
 
 if you don't have an HA vip setup, then the following cron job is sufficient:
 
-```
+```shell
 
 9,18,36,45,54 * * * * ${HOME}/.local/bin/sr3 sanity >> ${HOME}/.cache/sr3/log/cron_sanity.log  2>&1
 
@@ -193,8 +193,9 @@ if you don't have an HA vip setup, then the following cron job is sufficient:
 the processes do not crash very often, so a large proportion of the time, this
 cron job will do nothing. Sample output:
 
-```
-
+```shell
+   
+bob@loli:~/.cache/sr3/log$ tail sanity.log
 
 sanity: 2024-12-11 12:54:02,072 929959 [INFO] sarracenia.flow.watch __init__ watching!
 no missing processes found
@@ -221,7 +222,7 @@ but anything is compliant with security recommendations is fine.
 Example:
 
 
-```
+```shell
 
 bob@loli:~$ ssh-keygen -t ed25519 -f ~/.ssh/loli_bob_ed25519
 Generating public/private ed25519 key pair.
@@ -271,7 +272,7 @@ IdentityFile ~/.ssh/loli_bob_ed25519
 
 so now logins without a password should work, e.g.:
 
-```
+```shell
 
 bob@loli:~/.ssh$ ssh hpfx uname -a
 Linux hpfx3 6.8.0-48-generic #48~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Mon Oct  7 11:24:13 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
@@ -283,11 +284,12 @@ bob@loli:~/.ssh$
 ## Setup an AMQP publisher for bob@loli
 
 
-```
-mkdir -p ~/to_hpfx  # local uplink directory for files destined for hpfx.
-mkdir -p ~/.config/sr3/watch
+```shell
 
-ssh hpfx.collab.science.gc.ca -c 'mkdir -p ~/on_hpfx' # directory to store files in.
+bob@loli:~$ mkdir -p ~/to_hpfx  # local uplink directory for files destined for hpfx.
+bob@loli:~$ mkdir -p ~/.config/sr3/watch
+
+bob@loli:~$ ssh hpfx.collab.science.gc.ca -c 'mkdir -p ~/on_hpfx' # directory to store files in.
 
 ```
 
@@ -389,10 +391,11 @@ EOT
 ### Start it up.
 
 
-```
-systemctl --user start metpx-sr3_user
-sr3 status
-bob@loli:~/.config/sr3/sender$ sr3 status
+```shell
+
+bob@loli:~$ systemctl --user start metpx-sr3_user
+bob@loli:~$ sr3 status
+bob@loli:~$ sr3 status
 status:
 Component/Config     Processes   Connection        Lag                              Rates
                      State   Run Retry  msg data   Que   LagMax   LagAvg  Last  %rej     pubsub   messages     RxData     TxData
