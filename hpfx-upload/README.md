@@ -48,7 +48,7 @@ What we are doing:
 * remote cluster server, called *hpfx*
    * an account on the remote server.  (say pas037)
    * a directory with enough room to put the data. (say ~pas037/on_hpfx)
-   * an account on the rabbitmq (amqp) broker on the cluster. (say: BOB)
+   * an account on the rabbitmq (amqp) broker on the cluster. (say: pas037)
    * call the server hpfx.collab.science.gc.ca (call it hpfx for short.)
      hpfx.collab.science.gc.ca has access to the cluster's storage.
 
@@ -291,6 +291,12 @@ ssh hpfx.collab.science.gc.ca -c 'mkdir -p ~/on_hpfx' # directory to store files
 
 ```
 
+Note that to_hpfx needs to be in a file system with enough space to hold all 
+the files expected to transit through it.
+
+Cleanup of this directory after transfer is complete is outside the 
+scope of this exercise.
+
 ### write the amqp auth information to a local credential store:
 
     echo amqps://pas037:pas037_password@hpfx.collab.science.gc.ca >>~/.config/sr3/credentials.conf
@@ -343,6 +349,9 @@ sendTo sftp://hpfx
 # how many parallel transfer processes.
 instances 5 
 
+# by default file removals will also be updated on hpfx.
+#fileEvents -delete,rmdir
+
 # use scp binary for files bigger than a threshold.
 # for smaller files, it batches a whole batch of transfers over a single
 # connection, saving setup/teardown per file, but done in python.
@@ -362,7 +371,6 @@ nodupe_ttl on
 
 # exclude working files (that end in .tmp)
 reject .*.tmp$
-directory /home/pas037/on_hpfx
 accept .*
 
 post_broker hpfx://pas037@hpfx.collab.science.gc.ca
@@ -635,6 +643,29 @@ pas037@hpfx3:~$
 ```
 
 For this case, it appends the entire absolute path after the hot directory on the destination.
+
+# Can we autoclean the loli uplink directory?
+
+Once the file has been successfully transferred to hpfx, we may want to remove it
+from the directory on the local linux server.
+
+Yes. A small subscriber can be added to subscribe to successful uplinking, and could
+delete the corresponding files on bob@loli. Left as an exercise.
+Otoh, that would also delete upstream, see next point.
+
+# Can we autoclean the hpfx uplink directory, from Loli?
+
+Yes. the watch, by default, sends file removal events as well as creation.
+If that is not what is desired then a line like:
+
+```
+
+fileEvents -delete,rmdir
+
+
+```
+would prevent the watch from publishing those events. This can be added
+to either the watch or sender configurations (or both.)
 
 
 # More Continuous Testing
