@@ -360,7 +360,10 @@ sendTo sftp://hpfx
 instances 5 
 
 # by default file removals will also be updated on hpfx.
-#fileEvents -delete,rmdir
+fileEvents -delete,rmdir
+
+# if you want to delete local files after upload, uncomment this:
+# delete_source on
 
 # use scp binary for files bigger than a threshold.
 # for smaller files, it batches a whole batch of transfers over a single
@@ -564,6 +567,12 @@ broker amqps://pas037@hpfx.collab.science.gc.ca
 exchange xs_pas037_loli_bob_queue_for_hpfx
 
 sendTo sftp://hpfx
+
+# prevent local file deletrion from deleting uploaded files.
+fileEvents -delete,rmdir
+
+# delete local files after upload.
+# delete_source on
 
 # while files are being uploaded, have a .tmp suffix:
 inflight .tmp
