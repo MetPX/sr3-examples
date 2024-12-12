@@ -384,7 +384,7 @@ EOT
 ```
 systemctl --user start metpx-sr3_user
 sr3 status
-bob@SSC-5CD2310S60:~/.config/sr3/sender$ sr3 status
+bob@loli:~/.config/sr3/sender$ sr3 status
 status:
 Component/Config     Processes   Connection        Lag                              Rates
                      State   Run Retry  msg data   Que   LagMax   LagAvg  Last  %rej     pubsub   messages     RxData     TxData
@@ -445,7 +445,6 @@ just the encrypted transport.
 
 
 
-
 ## Try it out
 
 So it should be working now. the installation is complete.
@@ -472,6 +471,170 @@ So it should be working now. the installation is complete.
 
 * look in ~/.cache/sr3/log.  Each component has a log file, will report every file noticed (in the watch) and copied (by the sender)
 * sr3 status to view how the daemons are doing.
+
+# Do I need to copy files into a hot directory?
+
+No. That is just a convenient interface so that users do not need to invoke the sr3 tools explicitly.
+to save moving or copying the files locally, 
+one can run two slightly different configurations, shown below:
+
+```shell
+
+bob@loli:~$ mkdir -p ~/.config/sr3/post
+bob@loli:~$ cat >~/.config/sr3/post/queue_for_hpfx.conf <<EOT
+
+post_broker amqps://pas037@hpfx.collab.science.gc.ca
+post_exchange xs_pas037_loli_bob_queue_for_hpfx
+
+post_baseUrl file:
+
+nodupe_ttl on
+
+# exclude working files (that end in .tmp)
+reject .*.tmp$
+accept .*
+EOT
+
+```
+
+This makes a new poster that is not rooted at the ~/to_hpfx directory.
+It creates a second exchange for a second sender to listen for these
+kinds of posts (that aren't relative to the hot directory.) like so:
+
+```shell
+
+bob@loli:~$ cat >~/.config/sr3/sender/queue_for_hpfx.conf <<EOT
+post_broker amqps://pas037@hpfx.collab.science.gc.ca
+post_exchange xs_pas037_loli_bob_queue_for_hpfx
+
+post_baseUrl file:
+
+nodupe_ttl on
+
+# exclude working files (that end in .tmp)
+reject .*.tmp$
+accept .*
+
+bob@SSC-5CD2310S60:~/.cache/sr3/log$ more ~/.config/sr3/sender/qu*
+
+broker amqps://pas037@hpfx.collab.science.gc.ca
+exchange xs_pas037_loli_bob_queue_for_hpfx
+
+sendTo sftp://hpfx
+
+# while files are being uploaded, have a .tmp suffix:
+inflight .tmp
+
+nodupe_ttl on
+
+# how many processes participate in transfer (parallelism.)
+instances 1
+
+accelThreshold 1M
+
+# exclude working files (that end in .tmp)
+reject .*.tmp$
+accept .*
+
+
+# tell others about uploaded files.
+
+post_broker amqps://pas037@hpfx.collab.science.gc.ca
+
+# channel others can subscribe to get notice when files arrive.
+post_exchange xs_pas037_new_in_to_hpfx
+
+post_baseUrl sftp://pas037@hpfx.collab.science.gc.ca/on_hpfx
+
+# what to subtract from the path when posting
+post_baseDir /home/pas037/on_hpfx
+
+EOT
+
+```
+
+This sender:
+* listens on a different exchange (channel)
+* doesn't remove beginning of path or look for file in hot directory
+* copy results in absolute path being appended under hpfx hotdir.
+
+```shell
+
+bob@SSC-5CD2310S60:~$ sr3 declare post/queue_for_hpfx
+bob@SSC-5CD2310S60:~$ sr3 start sender/queue_for_hpfx
+bob@SSC-5CD2310S60:~$ sr3 status
+status:
+Component/Config      Processes   Connection        Lag                              Rates
+                      State   Run Retry  msg data   Que   LagMax   LagAvg   Last  %rej     pubsub   messages     RxData     TxData
+                      -----   --- -----  --- ----   ---   ------   ------   ----  ----     ------   --------     ------     ------
+post/queue_for_hpfx   stop    0/0     0   0%   0%     0    0.00s    0.00s      0  0.0%       0B/s       0m/s       0B/s       0B/s
+sender/queue_for_hpfx idle    1/1     0 100%   0%     0    0.00s    0.00s 17m32s  0.0%       0B/s       0m/s       0B/s       0B/s
+sender/to_hpfx        run     5/5     2  99%   3%     0    1.99s    1.22s  3m19s  0.0%     316B/s       0m/s       0B/s   5.1KiB/s
+watch/to_hpfx         run     1/1     0 100%   0%     0    0.00s    0.00s  3m22s  0.0%       0B/s       0m/s       0B/s       0B/s
+      Total Running Configs:   4 ( Processes: 10 missing: 0 stray: 0 )
+                     Memory: uss:284.5MiB rss:414.4MiB vms:2.0GiB
+                   CPU Time: User:1098.56s System:123.90s
+           Pub/Sub Received: 1m/s (985B/s), Sent:  1m/s (535B/s) Queued: 0 Retry: 4, Mean lag: 1.22s
+              Data Received: 0f/s (598B/s), Sent: 1f/s (17.0KiB/s)
+bob@SSC-5CD2310S60:~$
+
+```
+Need to *declare* the exchange so that when the queue_for_hpfx sender is started, it can bind to an existing exchange
+(which is created by the poster.) If that's skipped, then it will take a little while the first time 
+things are started for the sender to start paying attention to events.
+
+example, on loli do:
+
+```shell
+bob@SSC-5CD2310S60:~$ pwd
+/home/bob
+bob@SSC-5CD2310S60:~$ echo lala >1stfile
+bob@SSC-5CD2310S60:~$ sr3_post -c queue_for_hpfx -p 1stfile
+2024-12-12 14:04:06,249 [INFO] sarracenia.moth.amqp putSetup exchange declared: xs_pas037_loli_bob_queue_for_hpfx (as: amqps://pas037@hpfx.collab.science.gc.ca/)
+2024-12-12 14:04:06,272 [INFO] sarracenia.flowcb.log after_accept accepted: (lag: 0.02 )  exchange: ['xs_pas037_loli_bob_queue_for_hpfx'] subtopic: home.bob a file with baseUrl: file: relPath: home/bob/1stfile id: UaNrmLF size: 5
+2024-12-12 14:04:06,300 [INFO] sarracenia.flowcb.log after_post posted to exchange: xs_pas037_loli_bob_queue_for_hpfx topic: v03.home.bob a file with baseUrl: file: relPath: home/bob/1stfile size: 5 id: UaNrmLF
+2024-12-12 14:04:06,301 [INFO] sarracenia.flow please_stop asked to stop
+2024-12-12 14:04:06,301 [INFO] sarracenia.moth please_stop asked to stop
+2024-12-12 14:04:06,301 [INFO] sarracenia.flow _runHousekeeping on_housekeeping pid: 1021822 post/queue_for_hpfx instance: 0
+2024-12-12 14:04:06,304 [INFO] sarracenia.flowcb.housekeeping.resources on_housekeeping Current cpu_times: user=0.1 system=0.03
+2024-12-12 14:04:06,305 [INFO] sarracenia.flowcb.housekeeping.resources on_housekeeping Current mem usage: 64.0MiB, accumulating count (1 or 1/100 so far) before self-setting threshold
+2024-12-12 14:04:06,305 [INFO] sarracenia.flowcb.nodupe.disk on_housekeeping was 0, but since  0.36 sec, increased up to 1, now saved 1 entries
+2024-12-12 14:04:06,305 [INFO] sarracenia.flowcb.log stats version: 3.00.56, started: now, last_housekeeping:  0.4 seconds ago
+2024-12-12 14:04:06,305 [INFO] sarracenia.flowcb.log stats messages received: 1, accepted: 1, rejected: 0   rate accepted: 100.0% or 2.8 m/s
+2024-12-12 14:04:06,305 [INFO] sarracenia.flowcb.log stats files transferred: 1 bytes: 5Bytes rate: 13Bytes/sec
+2024-12-12 14:04:06,305 [INFO] sarracenia.flowcb.log stats lag: average: 0.02, maximum: 0.02
+2024-12-12 14:04:06,305 [INFO] sarracenia.flow please_stop asked to stop
+2024-12-12 14:04:06,305 [INFO] sarracenia.moth please_stop asked to stop
+2024-12-12 14:04:06,305 [INFO] sarracenia.flow _runHousekeeping on_housekeeping pid: 1021822 post/queue_for_hpfx instance: 0
+2024-12-12 14:04:06,309 [INFO] sarracenia.flowcb.housekeeping.resources on_housekeeping Current cpu_times: user=0.1 system=0.03
+2024-12-12 14:04:06,309 [INFO] sarracenia.flowcb.housekeeping.resources on_housekeeping Current mem usage: 64.0MiB, accumulating count (1 or 1/100 so far) before self-setting threshold
+2024-12-12 14:04:06,309 [INFO] sarracenia.flowcb.nodupe.disk on_housekeeping was 1, but since  0.00 sec, increased up to 1, now saved 1 entries
+2024-12-12 14:04:06,309 [INFO] sarracenia.flowcb.log stats version: 3.00.56, started: now, last_housekeeping:  0.0 seconds ago
+2024-12-12 14:04:06,309 [INFO] sarracenia.flowcb.log stats messages received: 0, accepted: 0, rejected: 0   rate accepted: 0.0% or 0.0 m/s
+2024-12-12 14:04:06,309 [INFO] sarracenia.flowcb.log stats files transferred: 0 bytes: 0Bytes rate: 0Bytes/sec
+2024-12-12 14:04:06,341 [INFO] sarracenia.flow close flow/close completed cleanly pid: 1021822 post/queue_for_hpfx instance: 0
+bob@SSC-5CD2310S60:~$ 
+
+```
+
+Yes... it is verbose... the C version is a lot less voluble. The only useful line in this output is the *after_post* line (third one)... saying it was posted.
+
+then can look on hpfx:
+```
+pas037@hpfx3:~/on_hpfx/home/bob$ cd
+pas037@hpfx3:~$ ls -lR ~/on_hpfx/home
+/home/pas037/on_hpfx/home:
+total 4
+drwxrwxr-x 2 pas037 ssc_di 4096 Dec 12 19:19 bob
+
+/home/pas037/on_hpfx/home/bob:
+total 0
+-rw-r--r-- 1 pas037 ssc_di 5 Dec 12 19:19 1stfile
+pas037@hpfx3:~$
+
+```
+
+For this case, it appends the entire absolute path after the hot directory on the destination.
 
 
 # More Continuous Testing
