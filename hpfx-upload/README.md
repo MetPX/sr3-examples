@@ -58,8 +58,13 @@ What we are doing:
      in the same tree as this file. One can copy from the tree,
      of copy/paste content from this document.
 
-     * *config/* subdirectory would be *~/.config* in a user account.
-     * *config/ssh* would be the *~/.ssh* directory in a user account.
+     * *loli_config/* subdirectory would be *~/.config* in a user account on the local linux server.
+     * *loli_config/ssh* would be the *~/.ssh* directory in a user account.
+     * *hpfx_config/* files file which would be in *~/.config* on hpfx (barely used.) 
+     * *hpfx_config/ssh* what needs to be on remote ~/.ssh to acccept client key.
+
+     After copying the files, one perform global substitutions 
+     with: find hpfx_config/ -type f | xargs sed -i 's+pas037+good001+g'  
 
    * Documentation on metpx-sr3:  https://metpx.github.io/sarracenia
 
@@ -140,23 +145,23 @@ for example:
 
 ```shell
 
-   mkdir -p ~/.config/systemd/user
-   cd ~/.config/systemd/user
+   bob@loli:~$ mkdir -p ~/.config/systemd/user
+   bob@loli:~$ cd ~/.config/systemd/user
 
    # currently:
-   wget https://raw.githubusercontent.com/MetPX/sarracenia/refs/heads/development/tools/metpx-sr3_user.service
+   bob@loli:~$ wget https://raw.githubusercontent.com/MetPX/sarracenia/refs/heads/development/tools/metpx-sr3_user.service
 
    # OR, after 3.0.57 is released:
-   wget https://raw.githubusercontent.com/MetPX/sarracenia/refs/heads/stable/tools/metpx-sr3_user.service
+   bob@loli:~$ wget https://raw.githubusercontent.com/MetPX/sarracenia/refs/heads/stable/tools/metpx-sr3_user.service
 
-   vi metpx-sr3_user.service
+   bob@loli:~$ vi metpx-sr3_user.service
    # replace /usr/bin/sr3 by where it really is: /home/bob/.local/bin/sr3
    # in vi something like below would do that:
    :%s+/usr/bin/sr3+/home/bob/.local/bin/sr3+
 
    # so it starts up with the server in this account.
-   loginctl enable-linger
-   systemctl --user enable metpx-sr3_user
+   bob@loli:~$ loginctl enable-linger
+   bob@loli:~$ systemctl --user enable metpx-sr3_user
 
 ```
 
@@ -443,6 +448,8 @@ just the encrypted transport.
 
 ## Try it out
 
+So it should be working now. the installation is complete.
+
 * copy files in the directory... see how they show up on the other side.
 * copy trees into the directory... see how the multiple instances provide parallellism.
 * reboot the server, see that the daemons recover and continue.
@@ -452,8 +459,24 @@ just the encrypted transport.
 * add subscriptions gpsc (a second cluster) to pull files from hpfx (copying from 1 network zone to a second one.)
 * if a file is missed... should likely describe how to recover... 
   * use touch.
+* if a file foobar is only half-way there...
+  * it will be named foobar.tmp on hpfx.
+  * hpfx will only remove a file from it's copy queue after successful completion of the copy.
+  * when the copy resumes, it will remove foobar.tmp, and make a new one.
+  * when the copy is complete, it will remove the .tmp suffix.
+
 * do we want mtime preserved?
   * timeCopy, permCopy
 
+# How do I know that is going on?
+
+* look in ~/.cache/sr3/log.  Each component has a log file, will report every file noticed (in the watch) and copied (by the sender)
+* sr3 status to view how the daemons are doing.
 
 
+# More Continuous Testing
+
+
+For more involved testing, can hook up a continuous feed
+see `TESTING.md`_ for that. That involves installing some audit and cleanup jobs
+on hpfx.
