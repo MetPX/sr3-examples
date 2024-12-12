@@ -218,7 +218,7 @@ bob@loli:~/.cache/sr3/log$
 ```
 
 
-## Setup SSH for passwordless access.
+## Setup SSH for Passwordless Access.
 
 The tool will be doing transfers in the background using ssh protocols. 
 One must be able to ssh into the remote server from the local one 
@@ -289,7 +289,7 @@ bob@loli:~/.ssh$
 ```
    
 
-## Setup an AMQP publisher for bob@loli
+## Setup an AMQP Publisher for bob@loli
 
 
 ```shell
@@ -422,7 +422,7 @@ watch/to_hpfx        idle    1/1     0 100%   0%     0    0.00s    0.00s   n/a  
 It should be running now.
 
 
-## Want more Speed?
+## Faster?
 
 Often, a single tcp stream cannot make effective use of the bandwidth available between
 two points, especially when latency is large. The simplest and often most effective 
@@ -457,11 +457,11 @@ these switches are:
 * -s use SFTP protocol (instead of earlier scp one.)
 * -l limit bandwidth to the given number of KB/sec.
 
-
-One can use options such as *ConnectMaster* to have longer lasting binary connections.
+The %s and %d options are replaced by the source and destination specifications
+in a format accepts by the standard scp command. One can use options such 
+as *ConnectMaster* to have longer lasting binary connections.
 One can replace /usr/bin/scp by some other program, or give it the -S flag to replace
 just the encrypted transport.
-
 
 
 ## Try it out
@@ -486,15 +486,39 @@ So it should be working now. the installation is complete.
 * do we want mtime preserved?
   * timeCopy, permCopy
 
-# How do I know that is going on?
+### How do I know that is going on?
 
 * look in ~/.cache/sr3/log.  Each component has a log file, will report every file noticed (in the watch) and copied (by the sender)
 * sr3 status to view how the daemons are doing.
 
-# Do I need to copy files into a hot directory?
+### Can we autoclean the loli uplink directory?
 
-No. That is just a convenient interface so that users do not need to invoke the sr3 tools explicitly.
-to save moving or copying the files locally, 
+Once the file has been successfully transferred to hpfx, we may want to remove it
+from the directory on the local linux server.
+
+Yes. A small subscriber can be added to subscribe to successful uplinking, and could
+delete the corresponding files on bob@loli. Left as an exercise.
+Otoh, that would also delete upstream, see next point.
+
+### Can we autoclean the hpfx uplink directory, from Loli?
+
+Yes. the watch, by default, sends file removal events as well as creation.
+If that is not what is desired then a line like:
+
+```
+
+fileEvents -delete,rmdir
+
+
+```
+would prevent the watch from publishing those events. This can be added
+to either the watch or sender configurations (or both.)
+
+## Do I need to Copy Files into a Hot Directory?
+
+No. That is just a convenient interface so that users 
+do not need to invoke the sr3 tools explicitly.
+To save moving or copying the files locally, 
 one can run two slightly different configurations, shown below:
 
 ```shell
@@ -655,28 +679,6 @@ pas037@hpfx3:~$
 
 For this case, it appends the entire absolute path after the hot directory on the destination.
 
-# Can we autoclean the loli uplink directory?
-
-Once the file has been successfully transferred to hpfx, we may want to remove it
-from the directory on the local linux server.
-
-Yes. A small subscriber can be added to subscribe to successful uplinking, and could
-delete the corresponding files on bob@loli. Left as an exercise.
-Otoh, that would also delete upstream, see next point.
-
-# Can we autoclean the hpfx uplink directory, from Loli?
-
-Yes. the watch, by default, sends file removal events as well as creation.
-If that is not what is desired then a line like:
-
-```
-
-fileEvents -delete,rmdir
-
-
-```
-would prevent the watch from publishing those events. This can be added
-to either the watch or sender configurations (or both.)
 
 
 # More Continuous Testing
