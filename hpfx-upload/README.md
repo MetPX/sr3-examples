@@ -142,6 +142,11 @@ for example:
 
    mkdir -p ~/.config/systemd/user
    cd ~/.config/systemd/user
+
+   # currently:
+   wget https://raw.githubusercontent.com/MetPX/sarracenia/refs/heads/development/tools/metpx-sr3_user.service
+
+   # OR, after 3.0.57 is released:
    wget https://raw.githubusercontent.com/MetPX/sarracenia/refs/heads/stable/tools/metpx-sr3_user.service
 
    vi metpx-sr3_user.service
