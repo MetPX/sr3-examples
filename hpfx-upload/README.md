@@ -450,7 +450,7 @@ binary, e.g. for buffer sizes.)
 
 ```
 
-accelScp /usr/bin/scp -B -s -l 1024 %s %d
+accelScpCommand /usr/bin/scp -B -s -l 1024 %s %d
 
 ```
 
