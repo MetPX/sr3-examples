@@ -5,7 +5,7 @@
 
 * we have someone handy with linux command line.
 * we have a local linux server, with access to large data sets 
-* we have a cluster (called gpsc), or data centre with a lot of storage.
+* we have a cluster (called hpfx), or data centre with a lot of storage.
 * ssh access between local and remote.
 * we want to upload data from the local linux server to the remote data centre.
 * the normal linux way to have a long running service is to run processes in
@@ -505,17 +505,20 @@ Otoh, that would also delete upstream, see next point.
 
 ### Can we autoclean the hpfx uplink directory, from Loli?
 
-Yes. the watch, by default, sends file removal events as well as creation.
-If that is not what is desired then a line like:
+With the given configuration, no, file removals are not forwarded. 
+If that is not what is desired then comment the fileEvents line:
 
 ```
 
-fileEvents -delete,rmdir
+#fileEvents -delete,rmdir
 
 
 ```
-would prevent the watch from publishing those events. This can be added
-to either the watch or sender configurations (or both.)
+
+would have the watch from publishing those events. This can be added
+to either the watch or sender configurations (or both.) In that case,
+deletion at source will result in deleting at the other end as well.
+
 
 ## Do I need to Copy Files into a Hot Directory?
 
