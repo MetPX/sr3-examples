@@ -1,0 +1,9 @@
+
+```
+
+Host hpfx
+Hostname hpfx.collab.science.gc.ca
+User pas037
+IdentityFile ~/.ssh/loli_bob_ed25519
+
+```
