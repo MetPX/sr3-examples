@@ -212,7 +212,9 @@ class Dcpflow(FlowCB):
 
         if hasattr(self.o,'nodupe_fileAgeMax'):
             self.max_age_in_minutes = int(self.o.nodupe_fileAgeMax/60)
-
+        else:
+            logger.info( f" need to set nodupe_fileAgeMax for oldest data to retrieve, defaulting to 10 minutes" )
+            self.max_age_in_minutes = 10
 
         logger.info( f" lrgs_download_redundancy is {self.o.lrgs_download_redundancy} " )
 
@@ -276,9 +278,11 @@ class Dcpflow(FlowCB):
             os.unlink(BulletinFile)
             return None
 
-    def gather(self):
+    def gather(self,messageCountMax):
         """
            return new messages.
+
+           note: messageCountMax ignored...
         """
 
         # define selection criteria for getDcpMessages.
@@ -335,7 +339,7 @@ class Dcpflow(FlowCB):
                     f.write( f"{os.getpid()}\n" )
             else:
                 logger.error( f"{str(cmd).replace(lsu.password,'password')}: failed")
-                return []
+                return (True, [] )
 
         rof=open(rawObsFile,'rb')
         FirstLine=False
@@ -395,4 +399,4 @@ class Dcpflow(FlowCB):
                 messages.append(msg)
         rof.close()
 
-        return messages
+        return (True, messages )
