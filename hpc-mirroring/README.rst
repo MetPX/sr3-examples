@@ -81,6 +81,82 @@ What needs to be existing for this solution to apply?
 
 
 
+Setup
+-----
+
+* install a local broker (outside scope... FIXME point to existing recipe.)
+
+```
+
+./create_test_dirs.sh
+
+
+```
+
+This creates /tmp/source, /tmp/destination, and ~/fakeplace/user pointing to /tmp/source/realplace/user
+
+```
+
+./install_sr3_configs.sh
+sr3 declare cpost/mirror
+sr3 start
+
+
+```
+install the sr3 flow configurations for mirroring:
+
+```
+fractal% sr3 status
+status:
+Component/Config     Processes                                         Rates
+                     State   Run Retry  Que     Lag    Last    %rej  messages      Data
+                     -----   --- -----  ---     ---    ----    ----  --------      ----
+                     cpost/mirror         stop    0/0    -    -       -      -       -       -           -
+sarra/mirror_copy    idle  10/10    0    0    0.00s   n/a    0.0%     0m/s       0B/s
+shovel/mirror_tally  idle    1/1    0    0    0.00s   n/a    0.0%     0m/s       0B/s
+winnow/mirror00      idle    1/1    0    0    0.00s   n/a    0.0%     0m/s       0B/s
+winnow/mirror01      idle    1/1    0    0    0.00s   n/a    0.0%     0m/s       0B/s
+winnow/mirror02      idle    1/1    0    0    0.00s   n/a    0.0%     0m/s       0B/s
+winnow/mirror03      idle    1/1    0    0    0.00s   n/a    0.0%     0m/s       0B/s
+winnow/mirror04      idle    1/1    0    0    0.00s   n/a    0.0%     0m/s       0B/s
+      Total Running Configs:   7 ( Processes: 16 missing: 0 stray: 0 )
+                     Memory: uss:705.7MiB rss:936.8MiB vms:1.4GiB
+                   CPU Time: User:6.41s System:1.11s
+	   Pub/Sub Received: 0m/s (0B/s), Sent:  0m/s (0B/s) Queued: 0 Retry: 0, Mean lag: 0.00s
+	      Data Received: 0f/s (0B/s), Sent: 0f/s (0B/s)
+
+fractal%
+
+
+```
+
+* cpost/mirror - configuration of shim library used to post files in the source tree.
+* winnow/mirror0x - filtering of *noise* by delaying copies for 30 seconds between source and destination.
+* sarra/mirror_copy - the jobs that copy data from source to destination.
+* shovel/mirror_tally - count up the amount of data transferred from source to destination.
+
+
+run a typical job in a user directory that is linked into the source tree:
+
+```
+ iedir=`pwd`
+ cd ~/fakeplace/${USER}
+ ${iedir}/run_profile.sh
+
+```
+Now an commands run in this shell that write files should generate posts, and about a little over 30 seconds later
+copies will happen. e.g.:
+
+```
+  git clone https://github.com/torvalds/linux >git_clone.log 2>&1 &
+
+```
+
+This will take many minutes to run (limited by network bandwidth.) and create many files in the source tree.
+Those files will be copied to the destination tree.
+
+
+
 Configurations
 --------------
 

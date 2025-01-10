@@ -3,9 +3,9 @@ mkdir -p ~/.config/sr3/cpost ~/.config/sr3/winnow ~/.config/sr3/subscribe ~/.con
 
 if [ -d config -a -d config/sr3 ]; then
 
-    for c in cpost winnow sarra ; do
+    for c in cpost sarra shovel winnow; do
 	cd config/sr3/${c}
-	for cfg in *.conf ; do
+	for cfg in *.inc *.conf ; do
 	    if [ ! -f ~/.config/sr3/${c}/${cfg} ]; then
                 cp ${cfg} ~/.config/sr3/${c}
 	    fi

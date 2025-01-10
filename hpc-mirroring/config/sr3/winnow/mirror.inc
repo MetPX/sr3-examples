@@ -1,11 +1,7 @@
 
-broker amqp://tfeed@localhos
-topic_prefix v03.post
+broker amqp://tfeed@localhost
 
 expire 1d
-exchange xs_tfeed_winnow_mirror_primary_to_secondary
-subtopic #
-
 
 filename None
 
@@ -26,11 +22,10 @@ timeCopy true
 #debug true
 suppress_duplicates 60s
 
-statehost true
-vip 127.0.0.1
+#statehost true
+#vip 127.0.0.1
 
 post_broker amqp://tfeed@localhost
-post_topic_prefix v03.post
 post_exchange xs_tfeed_copy_mirror_primary_to_secondary
 
 post_base_url file:/
