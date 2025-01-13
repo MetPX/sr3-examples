@@ -70,11 +70,11 @@ What needs to be existing for this solution to apply?
 
    * amqps://opsM@mybroker
 
-6. the metpx-sr3c (C implementation) package (to provide the *shim library*) 
+6. The metpx-sr3c (C implementation) package (to provide the *shim library*)  (>= 3.24.12)
    installed on both clusters: https://github.com/MetPX/sarrac/releases
 
 7. the metpx-sr3 (Python implementation) package (to provide the winnow, and subscriber 
-   installed on both clusters:  https://github.com/MetPX/sarracenia/releases
+   installed on both clusters:  https://github.com/MetPX/sarracenia/releases (>= 3.0.57)
 
 8. Users willing to tweak their jobs/scripts to deal with limitations
    of this method or mirroring.
@@ -135,8 +135,8 @@ fractal%
 * sarra/mirror_copy - the jobs that copy data from source to destination.
 * shovel/mirror_tally - count up the amount of data transferred from source to destination.
 
-
-run a typical job in a user directory that is linked into the source tree:
+We will call this session the management shell. In another shell (call it shim shell), run a typical 
+job in a user directory that is linked into the source tree:
 
 ```
  iedir=`pwd`
@@ -152,43 +152,26 @@ copies will happen. e.g.:
 
 ```
 
-This will take many minutes to run (limited by network bandwidth.) and create many files in the source tree.
+This will take many minutes (15?) to run (limited by network bandwidth.) and create many files in the source tree.
 Those files will be copied to the destination tree.
 
-
-
-Configurations
---------------
-
-
-Posting
-~~~~~~~
-
-For the shim library:
+In the management shell can check how the mirroring went:
 
 ```
 
-cat >~/.config/sr3/cpost/shim_mirror_primary.conf <<EOT
+fractal% ./audit_mirror.sh
+Comparing contents of /tmp/source and /tmp/destination
+running audit...
+audit complete.
+3 Differences between files in source and desination
+0a1,2
+> c8f39b6465a9c18b4047940305d39ef5  /home/peter/.python_history
+> bc24a1268dbb2431045c38ff68c9a29e  /home/peter/.viminfo
+0 Differences between links in source and desination
+fractal%
 
-EOT
-
-```
-
-for the shell environment (e.g. ~/.bashrc? ~/.bash_profile) :
 
 ```
 
 
 
-```
-
-
-Winnowing
-~~~~~~~~~
-
-
-
-
-
-Copying
-~~~~~~~
