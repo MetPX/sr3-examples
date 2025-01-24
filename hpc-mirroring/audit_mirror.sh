@@ -19,7 +19,7 @@ wait
 echo "audit complete."
 
 file_diff_count="`diff source_files_md5.txt copy_files_md5.txt | wc -l`"
-echo "${file_diff_count} Differences between files in source and desination"
+echo "${file_diff_count} Differences between files in source tree (`wc -l source_files_md5.txt` files) and desination (`wc -l copy_files_md5.txt` files)"
 
 if [ "${file_diff_count}" -gt 0 ]; then
 	diff source_files_md5.txt copy_files_md5.txt

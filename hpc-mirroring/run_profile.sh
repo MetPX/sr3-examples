@@ -2,7 +2,7 @@
 script_to_run=$1
 
 if [ ! -f "${script_to_run}" ]; then
-  script_to_run=/usr/bin/bash
+  script_to_run=/bin/bash
 
   #echo "please supply a script to run"
   #exit 4
