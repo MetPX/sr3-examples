@@ -21,6 +21,8 @@ if [ -d config -a -d config/sr3 ]; then
 
     if [ ! -f ~/.config/sr3/default.conf ]; then
         cp config/sr3/default.conf ~/.config/sr3
+    elif [ ! "`grep PRIMARY_DIR ~/.config/sr3/default.conf`" ]; then
+        cat config/sr3/default.conf >>~/.config/sr3/default.conf
     fi
 
 fi
