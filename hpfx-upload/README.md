@@ -386,7 +386,7 @@ nodupe_ttl on
 reject .*.tmp$
 accept .*
 
-post_broker hpfx://pas037@hpfx.collab.science.gc.ca
+post_broker amqps://pas037@hpfx.collab.science.gc.ca
 
 post_baseUrl sftp://pas037@hpfx.collab.science.gc.ca/on_hpfx
 
