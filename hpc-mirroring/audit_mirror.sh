@@ -18,8 +18,11 @@ find $COPY_DIR -type l -print | sort | awk ' { print "\""$0"\""; }' | xargs ls -
 wait
 echo "audit complete."
 
+echo "files in source tree: `wc -l source_files_md5.txt`  destination tree: `wc -l copy_files_md5.txt`"
+echo "links in source tree: `wc -l source_link_content.txt`  destination tree: `wc -l copy_link_content.txt`"
 file_diff_count="`diff source_files_md5.txt copy_files_md5.txt | wc -l`"
-echo "${file_diff_count} Differences between files in source and desination"
+echo "${file_diff_count} Differences between files in source and destination"
+
 
 if [ "${file_diff_count}" -gt 0 ]; then
 	diff source_files_md5.txt copy_files_md5.txt

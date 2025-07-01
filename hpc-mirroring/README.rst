@@ -144,15 +144,16 @@ job in a user directory that is linked into the source tree:
  ${iedir}/run_profile.sh
 
 ```
-Now an commands run in this shell that write files should generate posts, and about a little over 30 seconds later
-copies will happen. e.g.:
+Now an commands run in this shell that write files should generate posts, 
+and about a little over 30 seconds later copies will happen. e.g.:
 
 ```
   git clone https://github.com/torvalds/linux >git_clone.log 2>&1 &
 
 ```
 
-This will take many minutes (15?) to run (limited by network bandwidth.) and create many files in the source tree.
+This will take many minutes (15?) to run (limited by network bandwidth.) and 
+create many files in the source tree.
 Those files will be copied to the destination tree.
 
 In the management shell can check how the mirroring went:
@@ -173,5 +174,22 @@ fractal%
 
 ```
 
+To leave end the test, exit the shell:
+
+```
+
+fractal% exit
+exit
+fractal%
+
+```
+
+One can also run also run a series of automated tests:
+
+```
+
+ ${iedir}/run_profile.sh ${iedir}/tests.sh
+
+```
 
 
